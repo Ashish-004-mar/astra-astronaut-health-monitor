@@ -604,15 +604,50 @@ small {
   margin-top: 12px;
 }
 .camera-panel {
-  padding: 17px;
+  padding: 18px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+.panel-heading-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.camera-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(18, 37, 45, 0.7);
+  border: 1px solid #35525a;
+  border-radius: 4px;
+  color: #a8c8d2;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  padding: 4px 7px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.camera-expand-btn:hover {
+  background: #203c43;
+  border-color: #5eead4;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(94, 234, 212, 0.25);
 }
 .camera-feed {
-  aspect-ratio: 1.57;
+  min-height: 250px;
+  aspect-ratio: 16 / 10;
   position: relative;
-  background: radial-gradient(ellipse, #172b33, #0a141b);
+  background: radial-gradient(ellipse at 50% 40%, #152932, #071218);
   border: 1px solid var(--line);
-  border-radius: 5px;
+  border-radius: 6px;
   overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+}
+@media (min-width: 1200px) {
+  .camera-feed {
+    min-height: 275px;
+  }
 }
 .camera-feed video,
 .camera-feed canvas {
@@ -622,6 +657,30 @@ small {
   height: 100%;
   object-fit: contain;
   transform: scaleX(-1);
+}
+.feed-corner-expand {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  background: rgba(10, 20, 26, 0.75);
+  border: 1px solid #35525a;
+  border-radius: 4px;
+  color: #9cbcc5;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
+}
+.feed-corner-expand:hover {
+  background: #1c363e;
+  border-color: #5eead4;
+  color: #5eead4;
+  transform: scale(1.08);
 }
 .camera-empty {
   position: absolute;
@@ -634,18 +693,18 @@ small {
   color: #65858f;
 }
 .camera-empty strong {
-  font-size: 10px;
-  font-weight: 400;
+  font-size: 11px;
+  font-weight: 500;
   color: #b8cbd0;
 }
 .camera-empty span {
-  font-size: 8px;
+  font-size: 9px;
 }
 .feed-label {
   position: absolute;
   left: 9px;
   top: 8px;
-  font-size: 6px;
+  font-size: 7px;
   letter-spacing: 1px;
   color: #718e98;
 }
@@ -662,8 +721,8 @@ small {
   display: flex;
   justify-content: space-between;
   gap: 5px;
-  margin: 12px 0;
-  font-size: 6px;
+  margin: 10px 0 6px;
+  font-size: 7px;
   color: #8ca8b1;
   letter-spacing: 0.4px;
 }
@@ -671,6 +730,210 @@ small {
   display: flex;
   align-items: center;
   gap: 4px;
+}
+/* Interactive Body Parts Recognition HUD */
+.body-part-tracker {
+  margin: 8px 0 12px;
+  padding: 10px 12px;
+  background: rgba(14, 27, 34, 0.6);
+  border: 1px solid rgba(56, 189, 248, 0.18);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.tracker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.tracker-title {
+  font-size: 7.5px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #91b5c2;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.tracker-badge {
+  font-size: 7px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  background: rgba(22, 42, 51, 0.7);
+  color: #6a8c97;
+  border: 1px solid #2d454f;
+}
+.tracker-badge.active {
+  background: rgba(6, 182, 212, 0.18);
+  color: #22d3ee;
+  border-color: #06b6d4;
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.2);
+}
+.body-part-chips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(82px, 1fr));
+  gap: 6px;
+}
+.body-part-chip {
+  padding: 5px 6px;
+  border-radius: 4px;
+  border: 1px solid #213840;
+  background: rgba(10, 20, 26, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  position: relative;
+  transition: all 0.25s ease;
+}
+.body-part-chip:hover {
+  border-color: #3b6674;
+  transform: translateY(-1px);
+}
+.body-part-chip.detected {
+  border-color: #34d399;
+  background: rgba(16, 185, 129, 0.1);
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.18);
+}
+.body-part-chip .chip-name {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #88a8b3;
+}
+.body-part-chip.detected .chip-name {
+  color: #bbf7d0;
+}
+.body-part-chip .chip-status {
+  font-size: 6.5px;
+  letter-spacing: 0.5px;
+  color: #55747f;
+  font-family: monospace;
+}
+.body-part-chip.detected .chip-status {
+  color: #34d399;
+  font-weight: 700;
+}
+.biomechanical-hud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(56, 189, 248, 0.15);
+  font-size: 7px;
+}
+.hud-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #7b9ea9;
+}
+.hud-stat strong {
+  color: #38bdf8;
+  font-weight: 600;
+  font-family: monospace;
+}
+/* Fullscreen Tracking Mode */
+.camera-panel.camera-fullscreen-mode {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99999 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  background: rgba(5, 12, 17, 0.98) !important;
+  backdrop-filter: blur(24px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 24px 32px !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+}
+.camera-fullscreen-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+}
+.fullscreen-badge-group h2 {
+  font-size: 15px;
+  letter-spacing: 1.5px;
+  margin: 4px 0 2px;
+  color: #e2f4f7;
+  font-weight: 700;
+}
+.fullscreen-tag {
+  font-size: 8px;
+  letter-spacing: 1.2px;
+  padding: 2px 7px;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid #38bdf8;
+  border-radius: 3px;
+  font-weight: 700;
+}
+.fullscreen-sub {
+  font-size: 8px;
+  letter-spacing: 0.8px;
+  color: #789ea9;
+}
+.fullscreen-close-btn {
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 8px 14px;
+  background: #142a32;
+  border-color: #38bdf8;
+  color: #e2f4f7;
+  cursor: pointer;
+}
+.fullscreen-close-btn:hover {
+  background: #1c3b46;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.4);
+}
+.camera-panel.camera-fullscreen-mode .camera-feed {
+  flex: 1;
+  min-height: 52vh;
+  max-height: 64vh;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto 16px;
+  aspect-ratio: auto;
+}
+.fullscreen-telemetry-tray {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+.tray-card {
+  background: rgba(11, 23, 30, 0.8);
+  border: 1px solid rgba(56, 189, 248, 0.16);
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+.tray-card h4 {
+  font-size: 9.5px;
+  letter-spacing: 0.8px;
+  color: #5eead4;
+  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tray-card p {
+  font-size: 8px;
+  line-height: 1.5;
+  color: #8aa9b2;
+  margin: 0;
 }
 .button {
   font-size: 9px;

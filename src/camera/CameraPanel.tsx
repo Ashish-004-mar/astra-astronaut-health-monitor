@@ -1,11 +1,27 @@
 import { useEffect, useRef, useState } from "react";
-import { Camera, ScanFace, ScanLine, ShieldCheck } from "lucide-react";
+import {
+  Activity,
+  Camera,
+  Crosshair,
+  Maximize2,
+  Minimize2,
+  ScanFace,
+  ScanLine,
+  ShieldCheck,
+} from "lucide-react";
 import type {
   FaceLandmarker,
   PoseLandmarker,
   NormalizedLandmark,
 } from "@mediapipe/tasks-vision";
-import { drawLandmarks, smooth } from "./LandmarkOverlay";
+import {
+  analyzeBodyParts,
+  drawLandmarks,
+  INITIAL_ANALYSIS,
+  smooth,
+  type DetectionAnalysis,
+} from "./LandmarkOverlay";
+
 export default function CameraPanel() {
   const video = useRef<HTMLVideoElement>(null),
     canvas = useRef<HTMLCanvasElement>(null),
@@ -16,24 +32,31 @@ export default function CameraPanel() {
     timer = useRef(0),
     generation = useRef(0),
     active = useRef(false);
+
   const [enabled, setEnabled] = useState(false),
     [tracking, setTracking] = useState(false),
     [loading, setLoading] = useState(false),
     [error, setError] = useState(""),
     [face, setFace] = useState(false),
-    [pose, setPose] = useState(false);
+    [pose, setPose] = useState(false),
+    [isFullscreen, setIsFullscreen] = useState(false),
+    [analysis, setAnalysis] = useState<DetectionAnalysis>(INITIAL_ANALYSIS);
+
   const clear = () => {
     const c = canvas.current;
     c?.getContext("2d")?.clearRect(0, 0, c.width, c.height);
     setFace(false);
     setPose(false);
+    setAnalysis(INITIAL_ANALYSIS);
   };
+
   function pause() {
     active.current = false;
     window.clearTimeout(timer.current);
     setTracking(false);
     clear();
   }
+
   function stop() {
     generation.current++;
     active.current = false;
@@ -49,6 +72,19 @@ export default function CameraPanel() {
     setLoading(false);
     clear();
   }
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isFullscreen]);
+
   useEffect(
     () => () => {
       generation.current++;
@@ -60,6 +96,7 @@ export default function CameraPanel() {
     },
     [],
   );
+
   async function enable() {
     setError("");
     const token = ++generation.current;
@@ -103,6 +140,7 @@ export default function CameraPanel() {
       if (token === generation.current) setLoading(false);
     }
   }
+
   async function start() {
     setError("");
     setLoading(true);
@@ -160,7 +198,22 @@ export default function CameraPanel() {
             c.height = v.videoHeight;
             const ctx = c.getContext("2d")!;
             setFace(f.length > 0);
-            setPose(p.some((x) => (x.visibility ?? 0) > 0.6));
+            setPose(p.some((x) => (x.visibility ?? 0) > 0.45));
+
+            let currentAnalysis = INITIAL_ANALYSIS;
+
+            if (p.length) {
+              poseStart ||= now;
+              previousPose = smooth(p, previousPose);
+              currentAnalysis = analyzeBodyParts(previousPose, f);
+              setAnalysis(currentAnalysis);
+            } else if (f.length) {
+              currentAnalysis = analyzeBodyParts([], f);
+              setAnalysis(currentAnalysis);
+            } else {
+              setAnalysis(INITIAL_ANALYSIS);
+            }
+
             if (f.length) {
               faceStart ||= now;
               previousFace = smooth(f, previousFace);
@@ -174,15 +227,15 @@ export default function CameraPanel() {
               faceStart = 0;
               previousFace = [];
             }
+
             if (p.length) {
-              poseStart ||= now;
-              previousPose = smooth(p, previousPose);
               drawLandmarks(
                 ctx,
                 previousPose,
                 PoseLandmarker.POSE_CONNECTIONS,
                 Math.min(1, (now - poseStart) / 800),
                 true,
+                currentAnalysis,
               );
             } else {
               poseStart = 0;
@@ -209,33 +262,80 @@ export default function CameraPanel() {
       if (token === generation.current) setLoading(false);
     }
   }
+
   return (
-    <section className="panel camera-panel">
+    <section
+      className={`panel camera-panel ${isFullscreen ? "camera-fullscreen-mode" : ""}`}
+    >
+      {isFullscreen && (
+        <div className="camera-fullscreen-header">
+          <div className="fullscreen-badge-group">
+            <span className="fullscreen-tag">ASTRA FLIGHT DECK</span>
+            <h2>ADVANCED BIOMETRIC & KINEMATIC SKELETAL TRACKER</h2>
+            <span className="fullscreen-sub">
+              REAL-TIME LOCAL EDGE COMPUTER VISION · ESC TO EXIT
+            </span>
+          </div>
+          <button
+            type="button"
+            className="button outline fullscreen-close-btn"
+            onClick={() => setIsFullscreen(false)}
+          >
+            <Minimize2 size={14} /> EXIT FULLSCREEN
+          </button>
+        </div>
+      )}
+
       <div className="panel-heading">
         <span>
           <Camera size={15} /> CAMERA TRACKING
         </span>
-        <i className={enabled ? "dot" : "dot muted"} />
+        <div className="panel-heading-right">
+          <button
+            type="button"
+            className="camera-expand-btn"
+            onClick={() => setIsFullscreen((prev) => !prev)}
+            title={isFullscreen ? "Exit Fullscreen" : "Expand to Fullscreen"}
+            aria-label={isFullscreen ? "Exit Fullscreen" : "Expand to Fullscreen"}
+          >
+            {isFullscreen ? <Minimize2 size={13} /> : <Maximize2 size={13} />}
+            <span>{isFullscreen ? "MINIMIZE" : "FULLSCREEN"}</span>
+          </button>
+          <i className={enabled ? "dot" : "dot muted"} />
+        </div>
       </div>
+
       <div className="camera-feed">
         <video ref={video} muted playsInline aria-label="Local camera feed" />
         <canvas ref={canvas} aria-hidden="true" />
         {!enabled && (
           <div className="camera-empty">
-            <ScanFace size={36} strokeWidth={1} />
+            <ScanFace size={40} strokeWidth={1} />
             <strong>Your space. Your privacy.</strong>
             <span>Camera is off by default</span>
           </div>
         )}
         <span className="feed-label">
           {tracking
-            ? "LOCAL TRACKING"
+            ? `LOCAL TRACKING · ${analysis.primaryRegion}`
             : enabled
               ? "CAMERA READY"
               : "CAMERA OFF"}
         </span>
+
+        <button
+          type="button"
+          className="feed-corner-expand"
+          onClick={() => setIsFullscreen((prev) => !prev)}
+          title={isFullscreen ? "Minimize View" : "Maximize to Fullscreen"}
+          aria-label={isFullscreen ? "Minimize View" : "Maximize to Fullscreen"}
+        >
+          {isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+        </button>
+
         <div className="feed-corner" />
       </div>
+
       <div className="detection-labels">
         <span>
           <ScanFace size={14} />
@@ -246,6 +346,57 @@ export default function CameraPanel() {
           {pose ? "BODY DETECTED" : "NO BODY DETECTED"}
         </span>
       </div>
+
+      {/* Interactive Body Parts Detection & Recognition */}
+      <div className="body-part-tracker" aria-label="Detected Body Parts">
+        <div className="tracker-header">
+          <span className="tracker-title">
+            <Crosshair size={12} className={tracking ? "spin-subtle" : ""} />
+            DETECTED BODY REGIONS
+          </span>
+          <span className={`tracker-badge ${tracking && analysis.detectedNames.length > 0 ? "active" : ""}`}>
+            {tracking ? analysis.primaryRegion : "STANDBY"}
+          </span>
+        </div>
+
+        <div className="body-part-chips-grid">
+          {analysis.parts.map((p) => (
+            <div
+              key={p.id}
+              className={`body-part-chip ${p.detected ? "detected" : "standby"}`}
+              title={`${p.label}: ${p.detected ? "Tracked & Visualized" : "Out of Camera View"}`}
+            >
+              <span className="chip-indicator" />
+              <span className="chip-name">{p.label}</span>
+              <span className="chip-status">
+                {p.detected ? "ACTIVE" : "OUT OF FRAME"}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {tracking && (
+          <div className="biomechanical-hud">
+            <div className="hud-stat">
+              <span className="hud-lbl">POSTURE STATUS</span>
+              <strong className="hud-val">{analysis.postureQuality}</strong>
+            </div>
+            {analysis.jointAngles.leftElbow !== undefined && (
+              <div className="hud-stat">
+                <span className="hud-lbl">L-ARM FLEXION</span>
+                <strong className="hud-val">{analysis.jointAngles.leftElbow}°</strong>
+              </div>
+            )}
+            {analysis.jointAngles.rightElbow !== undefined && (
+              <div className="hud-stat">
+                <span className="hud-lbl">R-ARM FLEXION</span>
+                <strong className="hud-val">{analysis.jointAngles.rightElbow}°</strong>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
       <div className="camera-controls">
         {!enabled ? (
           <button
@@ -274,21 +425,59 @@ export default function CameraPanel() {
           </>
         )}
       </div>
+
       {loading && !enabled && (
         <button className="text-button" onClick={stop}>
           CANCEL CAMERA REQUEST
         </button>
       )}
+
       {error && (
         <p role="alert" className="error">
           {error}
         </p>
       )}
+
       <p className="privacy">
         <ShieldCheck size={13} />
         Camera processing happens on your device. Video is not uploaded or
         recorded.
       </p>
+
+      {isFullscreen && (
+        <div className="fullscreen-telemetry-tray">
+          <div className="tray-card">
+            <h4>
+              <Activity size={13} /> SKELETAL SENSING
+            </h4>
+            <p>
+              MediaPipe 33-point kinematic pose model running at native frame
+              rates with real-time joint angle determination and interactive
+              cyber-skeleton visualization.
+            </p>
+          </div>
+          <div className="tray-card">
+            <h4>
+              <Crosshair size={13} /> ANATOMICAL RECOGNITION
+            </h4>
+            <p>
+              Autonomous region classification identifies cranial, thoracic,
+              brachial, and lower limb segments with continuous postural
+              alignment scoring.
+            </p>
+          </div>
+          <div className="tray-card">
+            <h4>
+              <ShieldCheck size={13} /> ZERO DATA EGRESS
+            </h4>
+            <p>
+              All video frames remain strictly inside local volatile CPU/GPU
+              textures. Zero network telemetry transmitted to mission control or
+              third parties.
+            </p>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
