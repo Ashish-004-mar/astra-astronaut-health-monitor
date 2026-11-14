@@ -1,14 +1,16 @@
 <div align="center">
 
-# ASTRA — Astronaut Health Monitor & Spaceflight Medicine Platform
-### NASA Space Apps Challenge 2026
+<a href="https://Ashish-004-mar.github.io/astra-astronaut-health-monitor/">
+  <img src="docs/assets/astra-galaxy.gif" alt="ASTRA Cinematic Galaxy Hero Banner" width="100%" />
+</a>
 
-<img src="github-showcase/public/readme-assets/earth-rotating.gif" alt="Rotating 3D Earth Globe" width="220" />
+<br /><br />
 
-<br />
+# ASTRA
+### ASTRONAUT HEALTH MONITOR
 
-**"Know your health. Stay mission-ready."**  
-*An autonomous, on-device bioastronautics intelligence platform engineered to monitor astronaut physiology, cognitive readiness, and closed-loop environmental safety during deep space transit.*
+**"Beyond Earth. Beyond Limits."**  
+*Exploring the future of autonomous astronaut health awareness, physiological digital twins, and closed-loop mission readiness.*
 
 <br />
 
@@ -22,9 +24,18 @@
 
 ---
 
-### [🌐 Launch Live 3D GitHub Pages Showcase](https://Ashish-004-mar.github.io/astra-astronaut-health-monitor/) · [🛰️ Repository Source](https://github.com/Ashish-004-mar/astra-astronaut-health-monitor)
+### [🌐 Launch Live 3D GitHub Pages Showcase](https://Ashish-004-mar.github.io/astra-astronaut-health-monitor/) · [🛰️ Repository Source](https://github.com/Ashish-004-mar/astra-astronaut-health-monitor) · [🌌 Watch Galaxy Video](docs/assets/astra-galaxy.mp4)
 
 ---
+
+<img src="github-showcase/public/readme-assets/earth-rotating.gif" alt="Rotating 3D Earth Globe" width="220" />
+
+<br />
+
+**"Know your health. Stay mission-ready."**  
+*An autonomous, on-device bioastronautics intelligence platform engineered to monitor astronaut physiology, cognitive readiness, and closed-loop environmental safety during deep space transit.*
+
+<br />
 
 </div>
 
