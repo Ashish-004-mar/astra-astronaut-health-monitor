@@ -1,8 +1,6 @@
 <div align="center">
 
-<a href="https://Ashish-004-mar.github.io/astra-astronaut-health-monitor/">
-  <img src="docs/assets/astra-galaxy.gif" alt="ASTRA Cinematic Galaxy Hero Banner" width="100%" />
-</a>
+<img src="docs/assets/astra-galaxy.gif" alt="ASTRA Cinematic Galaxy Autoplay Banner" width="100%" />
 
 <br /><br />
 
@@ -28,7 +26,7 @@
 
 ---
 
-<img src="github-showcase/public/readme-assets/earth-rotating.gif" alt="Rotating 3D Earth Globe" width="220" />
+<img src="docs/assets/earth-rotating.gif" alt="Rotating 3D Earth Globe" width="220" />
 
 <br />
 
@@ -51,7 +49,7 @@ During long-duration deep-space exploration (such as Artemis lunar missions and 
 
 The project features a dedicated **3D Space Showcase** hosted on GitHub Pages:
 
-[![ASTRA Cinematic Video Preview](github-showcase/public/readme-assets/hero-video-thumb.jpg)](https://Ashish-004-mar.github.io/astra-astronaut-health-monitor/)
+[![ASTRA Cinematic Video Preview](docs/assets/hero-video-thumb.jpg)](https://Ashish-004-mar.github.io/astra-astronaut-health-monitor/)
 
 > 👉 **Click the preview above to open the live interactive showcase**, featuring fullscreen 1080p intro video playback, interactive rotating WebGL Earth, 3D animated architecture, and operational module deep-dives.
 
@@ -62,7 +60,7 @@ The project features a dedicated **3D Space Showcase** hosted on GitHub Pages:
 ASTRA features continuous, frame-rate-independent animated biometric telemetry charts:
 
 <div align="center">
-  <img src="github-showcase/public/readme-assets/health-graph-animated.gif" alt="ASTRA Living Animated Health Graph" width="600" />
+  <img src="docs/assets/health-graph-animated.gif" alt="ASTRA Living Animated Health Graph" width="600" />
 </div>
 
 - **Scanning Radar Sweep**: A dynamic glowing cyan tracer sweeps across the 24-hour telemetry window to signify active clinical observation.
@@ -76,7 +74,7 @@ ASTRA features continuous, frame-rate-independent animated biometric telemetry c
 ASTRA is architected into 5 discrete, autonomous layers designed for zero-latency execution in deep space:
 
 <div align="center">
-  <img src="github-showcase/public/readme-assets/architecture-preview.gif" alt="ASTRA 5-Layer System Architecture" width="700" />
+  <img src="docs/assets/architecture-preview.gif" alt="ASTRA 5-Layer System Architecture" width="700" />
 </div>
 
 ```
@@ -125,7 +123,7 @@ $$\text{DATA} \longrightarrow \text{MONITOR} \longrightarrow \text{COMPARE} \lon
 ## ⚡ Operational Feature Matrix
 
 <div align="center">
-  <img src="github-showcase/public/readme-assets/features-preview.png" alt="ASTRA Operational Feature Matrix" width="700" />
+  <img src="docs/assets/features-preview.png" alt="ASTRA Operational Feature Matrix" width="700" />
 </div>
 
 | Subsystem | Core Capability | Provenance / Data Source | Practical Aerospace Benefit |
