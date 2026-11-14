@@ -32,3 +32,6 @@ public/media/*.original.mp4
 
 # Agent scratch & system logs
 .system_generated/
+
+# Vite cache
+.vite/
