@@ -62,6 +62,7 @@ export interface SpeechSession {
  * Starts a resilient, continuous speech recognition session.
  * Does not abruptly close on brief pauses or 'no-speech' events.
  * Stays open until the user finishes talking, clicks stop, or 15 seconds elapse.
+ * Includes proactive microphone permission acquisition and resilient single-phrase retry fallback.
  */
 export function startSpeechSession(
   lang: "en" | "hi",
@@ -85,6 +86,7 @@ export function startSpeechSession(
   let silenceTimer: ReturnType<typeof setTimeout> | null = null;
   let maxDurationTimer: ReturnType<typeof setTimeout> | null = null;
   let recognizer: SpeechRecognitionInstance | null = null;
+  let retried = false;
 
   const silenceTimeoutMs = options.silenceTimeoutMs ?? 2200;
   const maxDurationMs = options.maxDurationMs ?? 15000;
@@ -118,14 +120,39 @@ export function startSpeechSession(
     }
   }
 
-  function initRecognizer() {
+  // Pre-acquire microphone permission so Chrome doesn't emit false network error
+  async function checkPermissionAndInit() {
+    if (typeof navigator !== "undefined" && navigator.mediaDevices?.getUserMedia) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach((track) => track.stop());
+      } catch (err) {
+        if (err instanceof DOMException && err.name === "NotAllowedError") {
+          isExplicitlyEnded = true;
+          clearTimers();
+          options.onListeningChange(false, "Microphone access blocked");
+          options.onError(
+            lang === "hi"
+              ? "माइक्रोफ़ोन अनुमति अस्वीकृत हो गई। कृपया ब्राउज़र एड्रेस बार में माइक्रोफ़ोन की अनुमति दें।"
+              : "Microphone permission was denied. Please allow microphone access in your browser address bar.",
+          );
+          return;
+        }
+      }
+    }
+    if (!isExplicitlyEnded) {
+      initRecognizer(true);
+    }
+  }
+
+  function initRecognizer(continuousMode = true) {
     if (isExplicitlyEnded) return;
 
     try {
       const ActiveSpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!ActiveSpeechRec) return;
       recognizer = new ActiveSpeechRec();
-      recognizer.continuous = true;
+      recognizer.continuous = continuousMode;
       recognizer.interimResults = true;
       recognizer.lang = lang === "hi" ? "hi-IN" : "en-US";
 
@@ -162,7 +189,6 @@ export function startSpeechSession(
           // User spoke something; start/reset silence timer
           if (silenceTimer) clearTimeout(silenceTimer);
           silenceTimer = setTimeout(() => {
-            // Once user pauses for silenceTimeoutMs after speaking, auto-finalize!
             finalize();
           }, silenceTimeoutMs);
         }
@@ -170,7 +196,7 @@ export function startSpeechSession(
 
       recognizer.onerror = (event: SpeechRecognitionErrorEvent) => {
         // 'no-speech' is a standard timeout Chrome emits when the user is silent.
-        // DO NOT ABORT on no-speech! Keep the session open so user has time to talk.
+        // DO NOT ABORT on no-speech! Keep session open so user has time to talk.
         if (event.error === "no-speech") {
           return;
         }
@@ -188,14 +214,31 @@ export function startSpeechSession(
         }
 
         if (event.error === "network") {
-          // Chrome speech service network unreachable; notify gently without crashing
+          // If first attempt was continuous and failed with network, retry in single-phrase mode
+          if (!retried) {
+            retried = true;
+            console.warn("Speech recognition network error. Attempting resilient single-phrase retry...");
+            try {
+              recognizer?.abort();
+            } catch {
+              // ignore
+            }
+            setTimeout(() => {
+              if (!isExplicitlyEnded) {
+                initRecognizer(false);
+              }
+            }, 250);
+            return;
+          }
+
+          // If retry also failed, Chrome speech cloud service is offline or blocked
           isExplicitlyEnded = true;
           clearTimers();
           options.onListeningChange(false, "Speech service unavailable");
           options.onError(
             lang === "hi"
-              ? "ब्राउज़र स्पीच सेवा अनुपलब्ध है। कृपया नीचे सीधे अपना प्रश्न टाइप करें।"
-              : "Browser speech service is unavailable. Please type your query in the box below.",
+              ? "ब्राउज़र स्पीच सेवा अनुपलब्ध है (Google Cloud स्पीच सर्वर ऑफ़लाइन या अवरुद्ध है)। आप नीचे सीधे टाइप कर सकते हैं या किसी विषय पर क्लिक करें — ASTRA बोलकर उत्तर देगा।"
+              : "Browser speech service is unavailable (Google Cloud speech service is offline or unreachable). Please type your query below or click any topic — ASTRA will still speak the response.",
           );
           return;
         }
@@ -225,8 +268,8 @@ export function startSpeechSession(
     }
   }
 
-  // Launch recognition
-  initRecognizer();
+  // Launch recognition with proactive mic check
+  checkPermissionAndInit();
 
   // Maximum listening duration safety timer (15 seconds)
   maxDurationTimer = setTimeout(() => {

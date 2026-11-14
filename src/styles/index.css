@@ -2986,20 +2986,53 @@ small {
 
 /* Voice Notice & Listening Actions */
 .voice-notice-banner {
-  background: rgba(239, 68, 68, 0.15);
-  border-left: 3px solid #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+  border-left: 3px solid #f87171;
   border-bottom: 1px solid rgba(239, 68, 68, 0.25);
-  padding: 8px 14px;
+  padding: 10px 14px;
   font-size: 11px;
   color: #fca5a5;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: 8px;
+  align-items: flex-start;
+  gap: 10px;
   animation: fadeIn 0.2s ease;
 }
 
-.voice-notice-banner button {
+.notice-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.notice-text {
+  line-height: 1.45;
+}
+
+.notice-retry-btn {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(118, 223, 203, 0.18) !important;
+  border: 1px solid #76dfcb !important;
+  border-radius: 4px;
+  color: #76dfcb !important;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.notice-retry-btn:hover {
+  background: rgba(118, 223, 203, 0.35) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 8px rgba(118, 223, 203, 0.3);
+}
+
+.notice-dismiss-btn {
   background: transparent;
   border: none;
   color: #fca5a5;
@@ -3011,7 +3044,7 @@ small {
   transition: background 0.2s ease;
 }
 
-.voice-notice-banner button:hover {
+.notice-dismiss-btn:hover {
   background: rgba(239, 68, 68, 0.25);
   color: #ffffff;
 }

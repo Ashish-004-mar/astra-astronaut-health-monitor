@@ -53,6 +53,7 @@ export default function AstraVoicePanel() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const sessionRef = useRef<SpeechSession | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Auto-scroll chat to bottom
   useEffect(() => {
@@ -188,6 +189,9 @@ export default function AstraVoicePanel() {
       onError: (err) => {
         setVoiceNotice(err);
         setIsListening(false);
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 150);
       },
       onListeningChange: (listening, status) => {
         setIsListening(listening);
@@ -360,9 +364,23 @@ export default function AstraVoicePanel() {
           {/* Optional Voice Notice / Error Banner */}
           {voiceNotice && (
             <div className="voice-notice-banner">
-              <span>{voiceNotice}</span>
+              <div className="notice-inner">
+                <span className="notice-text">{voiceNotice}</span>
+                <button
+                  type="button"
+                  className="notice-retry-btn"
+                  onClick={() => {
+                    setVoiceNotice(null);
+                    toggleListening();
+                  }}
+                  title="Retry Voice Recognition"
+                >
+                  <RotateCcw size={11} /> {lang === "hi" ? "दोबारा माइक आज़माएं" : "Retry Mic"}
+                </button>
+              </div>
               <button
                 type="button"
+                className="notice-dismiss-btn"
                 onClick={() => setVoiceNotice(null)}
                 aria-label="Dismiss notice"
               >
@@ -462,6 +480,7 @@ export default function AstraVoicePanel() {
               {isListening ? <MicOff size={18} /> : <Mic size={18} />}
             </button>
             <input
+              ref={inputRef}
               type="text"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
