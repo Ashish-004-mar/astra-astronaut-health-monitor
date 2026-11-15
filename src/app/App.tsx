@@ -13,6 +13,7 @@ import {
   Radio,
   ChevronRight,
   VolumeX,
+  BookOpen,
 } from "lucide-react";
 import { useStore } from "../state/store";
 import Overview from "../pages/Overview";
@@ -22,6 +23,7 @@ import MindSpace from "../pages/MindSpace";
 import MissionCare from "../pages/MissionCare";
 import CameraTrackingPage from "../pages/CameraTrackingPage";
 import CinematicLanding from "../components/landing/CinematicLanding";
+import NasaSourcesPage from "../pages/NasaSourcesPage";
 import AstraVoicePanel from "../voice/AstraVoicePanel";
 import { audioAlertService, type ActiveAlert } from "../services/audioAlertService";
 const Background = lazy(() =>
@@ -44,6 +46,17 @@ export default function App() {
 
   const [activeAlerts, setActiveAlerts] = useState<ActiveAlert[]>([]);
   const [isSirenSounding, setIsSirenSounding] = useState(false);
+  const [viewNasaSources, setViewNasaSources] = useState(() => {
+    if (typeof window !== "undefined") {
+      const hash = window.location.hash.replace(/^#\/?/, "").toLowerCase();
+      return (
+        hash.startsWith("nasa-sources") ||
+        hash.startsWith("nasa") ||
+        hash.startsWith("sources")
+      );
+    }
+    return false;
+  });
 
   useEffect(() => {
     return audioAlertService.subscribe((alerts, sounding) => {
@@ -56,7 +69,20 @@ export default function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace(/^#\/?/, "").toLowerCase();
-      if (!hash) return;
+      if (!hash) {
+        setViewNasaSources(false);
+        return;
+      }
+
+      if (
+        hash.startsWith("nasa-sources") ||
+        hash.startsWith("nasa") ||
+        hash.startsWith("sources")
+      ) {
+        setViewNasaSources(true);
+        return;
+      }
+      setViewNasaSources(false);
 
       if (hash.startsWith("overview")) {
         setPage("Overview");
@@ -113,16 +139,16 @@ export default function App() {
 
   // Keep hash updated when page / subpage changes
   useEffect(() => {
-    if (!entered) return;
+    if (!entered || viewNasaSources) return;
     const pageSlug = page.toLowerCase().replace(/\s+/g, "-");
     const targetHash = subpage ? `#/${pageSlug}/${subpage}` : `#/${pageSlug}`;
     if (window.location.hash !== targetHash) {
       window.history.replaceState(null, "", targetHash);
     }
-  }, [page, subpage, entered]);
+  }, [page, subpage, entered, viewNasaSources]);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
-  }, [page, entered]);
+  }, [page, entered, viewNasaSources]);
   useEffect(() => {
     if (entered)
       document
@@ -138,13 +164,35 @@ export default function App() {
     <div
       className={`app ${reduced ? "reduced" : ""} ${entered ? "mission-arrival" : ""}`}
     >
-      {entered && (
+      {entered && !viewNasaSources && (
         <Suspense fallback={null}>
           <Background large={page === "Space"} />
         </Suspense>
       )}
-      {!entered ? (
-        <CinematicLanding onEnter={enter} reducedMotion={false} />
+      {viewNasaSources ? (
+        <NasaSourcesPage
+          onBack={() => {
+            setViewNasaSources(false);
+            if (window.location.hash.includes("nasa") || window.location.hash.includes("sources")) {
+              window.location.hash = entered ? "#/overview" : "";
+            }
+          }}
+          onEnterApp={() => {
+            setViewNasaSources(false);
+            enter();
+            setPage("Overview");
+            window.location.hash = "#/overview";
+          }}
+        />
+      ) : !entered ? (
+        <CinematicLanding
+          onEnter={enter}
+          reducedMotion={false}
+          onExploreNasaSources={() => {
+            setViewNasaSources(true);
+            window.location.hash = "#/nasa-sources";
+          }}
+        />
       ) : (
         <>
           <aside className="sidebar">
@@ -189,6 +237,33 @@ export default function App() {
               <small>
                 PROTOTYPE V1.0 <ArrowUpRight size={11} />
               </small>
+              <button
+                type="button"
+                className="nasa-sidebar-link"
+                onClick={() => {
+                  setViewNasaSources(true);
+                  window.location.hash = "#/nasa-sources";
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  fontSize: "10px",
+                  color: "#00f0ff",
+                  background: "rgba(0, 240, 255, 0.08)",
+                  border: "1px solid rgba(0, 240, 255, 0.25)",
+                  borderRadius: "6px",
+                  padding: "5px 10px",
+                  cursor: "pointer",
+                  marginTop: "8px",
+                  width: "100%",
+                  justifyContent: "center",
+                }}
+                title="View NASA research and data sources"
+              >
+                <BookOpen size={12} />
+                <span>NASA SOURCES</span>
+              </button>
             </div>
           </aside>
           <main className="main" tabIndex={-1}>

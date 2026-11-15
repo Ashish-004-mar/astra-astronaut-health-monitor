@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Play, Pause, AudioLines, Volume2 } from "lucide-react";
+import { ArrowRight, Play, Pause, AudioLines, Volume2, BookOpen } from "lucide-react";
 import { introConfig } from "./introConfig";
 import { introAudioService } from "../../services/introAudioService";
 import "../../styles/intro.css";
@@ -13,9 +13,17 @@ export type IntroState =
   | "WELCOME_VISIBLE"
   | "ENTERING_MISSION"
   | "DASHBOARD_OPEN";
-type Props = { onEnter: () => void; reducedMotion: boolean };
+type Props = {
+  onEnter: () => void;
+  reducedMotion: boolean;
+  onExploreNasaSources?: () => void;
+};
 
-export default function CinematicLanding({ onEnter, reducedMotion }: Props) {
+export default function CinematicLanding({
+  onEnter,
+  reducedMotion,
+  onExploreNasaSources,
+}: Props) {
   const [stage, setStage] = useState<IntroState>("INITIAL_LOADING");
   const [ready, setReady] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -268,6 +276,28 @@ export default function CinematicLanding({ onEnter, reducedMotion }: Props) {
           <ArrowRight size={27} strokeWidth={1.3} />
         </button>
         <span className="intro-entry-label">ENTER MISSION</span>
+
+        <button
+          type="button"
+          className="intro-nasa-sources-btn"
+          disabled={!welcome}
+          onClick={() => {
+            if (onExploreNasaSources) {
+              onExploreNasaSources();
+            } else {
+              window.location.hash = "#/nasa-sources";
+            }
+          }}
+          title="Explore official NASA research, space biology, and public data APIs"
+        >
+          <div className="btn-title-row">
+            <BookOpen size={13} className="nasa-icon" />
+            <span>EXPLORE NASA SOURCES</span>
+          </div>
+          <span className="btn-microtext">
+            Scientific References • Public Data • Research Evidence
+          </span>
+        </button>
       </motion.div>
 
       <div className="intro-bottomline">
