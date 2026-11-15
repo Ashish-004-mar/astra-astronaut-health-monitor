@@ -9,8 +9,8 @@ import {
   Clock,
   Bell,
   BookOpen,
-  ShieldAlert,
-  ArrowRight,
+  Radio,
+  ShieldCheck,
   Sparkles,
 } from "lucide-react";
 import {
@@ -18,6 +18,7 @@ import {
   getEquipmentInventory,
   type MissionEnvironmentId,
   type EmergencyEquipmentItem,
+  MISSION_ENVIRONMENTS,
 } from "../services/missionCareService";
 
 import EmergencyAssistView from "../components/missioncare/EmergencyAssistView";
@@ -47,6 +48,18 @@ export type MissionCareTab =
   | "reminders"
   | "resources";
 
+const TABS: { id: MissionCareTab; label: string; icon: typeof Siren }[] = [
+  { id: "emergency", label: "Emergency Assist", icon: Siren },
+  { id: "vitals", label: "Vitals Guide", icon: Activity },
+  { id: "assessment", label: "Triage & Symptoms", icon: ClipboardList },
+  { id: "environment", label: "Environment & Delay", icon: Globe },
+  { id: "crew", label: "Crew Roles", icon: Users },
+  { id: "equipment", label: "Medical Gear", icon: Box },
+  { id: "timeline", label: "Event Timeline", icon: Clock },
+  { id: "reminders", label: "Reminders", icon: Bell },
+  { id: "resources", label: "Offline Protocols", icon: BookOpen },
+];
+
 export default function MissionCare({ subpage, setSubpage }: MissionCareProps) {
   const [activeTab, setActiveTab] = useState<MissionCareTab>(() => {
     if (
@@ -65,7 +78,7 @@ export default function MissionCare({ subpage, setSubpage }: MissionCareProps) {
   });
 
   const [currentEnv, setCurrentEnv] = useState<MissionEnvironmentId>(() => getActiveEnvironment());
-  const [equipment, setEquipment] = useState<EmergencyEquipmentItem[]>(() => getEquipmentInventory());
+  const [equipment] = useState<EmergencyEquipmentItem[]>(() => getEquipmentInventory());
 
   // Sync subpage prop changes from parent
   useEffect(() => {
@@ -92,9 +105,11 @@ export default function MissionCare({ subpage, setSubpage }: MissionCareProps) {
     }
   };
 
+  const envInfo = MISSION_ENVIRONMENTS[currentEnv];
+
   return (
-    <div className="missioncare-page-root">
-      {/* Simulation Training Bar */}
+    <div className="missioncare-cockpit-frame">
+      {/* Top Training Drill Bar */}
       <TrainingScenarioBar
         onScenarioChange={(scenId) => {
           if (scenId === "chest_pain_collapse") {
@@ -103,115 +118,50 @@ export default function MissionCare({ subpage, setSubpage }: MissionCareProps) {
         }}
       />
 
-      {/* Main MissionCare Header Bar */}
-      <div className="missioncare-header-bar">
-        <div className="missioncare-title-group">
-          <div className="eyebrow">
-            ASTRA <span>/</span> SPACE MEDICAL EMERGENCY ASSISTANCE SYSTEM
+      {/* Cockpit Status Header Bar */}
+      <div className="cockpit-hud-bar">
+        <div className="hud-left-meta">
+          <div className="hud-badge status-ready">
+            <span className="live-dot" />
+            <span>MEDICAL ASSIST READY</span>
           </div>
-          <h1>MissionCare Emergency Support</h1>
-          <p className="missioncare-sub">
-            Autonomous health assessment, vital measurement tutorials, and crew coordination protocols designed for non-medical astronauts in deep space.
-          </p>
+
+          <div className="hud-badge env-indicator">
+            <Radio size={13} className="accent-cyan" />
+            <span>{envInfo.name}</span>
+            <small className="latency-tag">{envInfo.commLatencyMinutes}m 1-WAY DELAY</small>
+          </div>
         </div>
 
-        <div className="missioncare-header-actions">
+        <div className="hud-right-actions">
           <button
             type="button"
-            className="button primary emergency-shortcut-btn"
+            className={`hud-emergency-btn ${activeTab === "emergency" ? "active-alert" : ""}`}
             onClick={() => handleTabChange("emergency")}
           >
-            <Siren size={16} /> EMERGENCY ASSIST
+            <Siren size={15} />
+            <span>RAPID EMERGENCY ASSIST</span>
           </button>
         </div>
       </div>
 
-      {/* Sub-Navigation Tabs Bar */}
+      {/* Main MissionCare Tab Bar */}
       <nav className="missioncare-nav-bar" aria-label="MissionCare sections">
-        <button
-          type="button"
-          className={`care-nav-tab ${activeTab === "emergency" ? "active alert-tab" : ""}`}
-          onClick={() => handleTabChange("emergency")}
-        >
-          <Siren size={15} />
-          <span>1. Emergency Assist</span>
-        </button>
-
-        <button
-          type="button"
-          className={`care-nav-tab ${activeTab === "vitals" ? "active" : ""}`}
-          onClick={() => handleTabChange("vitals")}
-        >
-          <Activity size={15} />
-          <span>2. Vital Guide</span>
-        </button>
-
-        <button
-          type="button"
-          className={`care-nav-tab ${activeTab === "assessment" ? "active" : ""}`}
-          onClick={() => handleTabChange("assessment")}
-        >
-          <ClipboardList size={15} />
-          <span>3. Symptom Assessment</span>
-        </button>
-
-        <button
-          type="button"
-          className={`care-nav-tab ${activeTab === "environment" ? "active" : ""}`}
-          onClick={() => handleTabChange("environment")}
-        >
-          <Globe size={15} />
-          <span>4. Mission Environment</span>
-        </button>
-
-        <button
-          type="button"
-          className={`care-nav-tab ${activeTab === "crew" ? "active" : ""}`}
-          onClick={() => handleTabChange("crew")}
-        >
-          <Users size={15} />
-          <span>5. Crew Response</span>
-        </button>
-
-        <button
-          type="button"
-          className={`care-nav-tab ${activeTab === "equipment" ? "active" : ""}`}
-          onClick={() => handleTabChange("equipment")}
-        >
-          <Box size={15} />
-          <span>6. Emergency Equipment</span>
-        </button>
-
-        <button
-          type="button"
-          className={`care-nav-tab ${activeTab === "timeline" ? "active" : ""}`}
-          onClick={() => handleTabChange("timeline")}
-        >
-          <Clock size={15} />
-          <span>7. Emergency Timeline</span>
-        </button>
-
-        <button
-          type="button"
-          className={`care-nav-tab ${activeTab === "reminders" ? "active" : ""}`}
-          onClick={() => handleTabChange("reminders")}
-        >
-          <Bell size={15} />
-          <span>8. Health Reminders</span>
-        </button>
-
-        <button
-          type="button"
-          className={`care-nav-tab ${activeTab === "resources" ? "active" : ""}`}
-          onClick={() => handleTabChange("resources")}
-        >
-          <BookOpen size={15} />
-          <span>9. Offline Resources</span>
-        </button>
+        {TABS.map(({ id, label, icon: Icon }) => (
+          <button
+            key={id}
+            type="button"
+            className={`care-nav-tab ${activeTab === id ? "active" : ""} ${id === "emergency" ? "emergency-tab" : ""}`}
+            onClick={() => handleTabChange(id)}
+          >
+            <Icon size={14} />
+            <span>{label}</span>
+          </button>
+        ))}
       </nav>
 
       {/* Active Tab View Rendering */}
-      <div className="missioncare-tab-view">
+      <div className="missioncare-tab-content-area">
         {activeTab === "emergency" && (
           <EmergencyAssistView
             environment={currentEnv}

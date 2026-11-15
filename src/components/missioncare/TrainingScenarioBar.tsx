@@ -7,7 +7,7 @@ import {
   CheckCircle2,
   ChevronRight,
   Info,
-  AlertTriangle,
+  X,
 } from "lucide-react";
 import {
   TRAINING_SCENARIOS,
@@ -17,7 +17,6 @@ import {
   setActiveTrainingScenarioId,
   getTrainingScenarioStep,
   setTrainingScenarioStep,
-  type TrainingScenarioDef,
 } from "../../services/missionCareService";
 
 interface TrainingScenarioBarProps {
@@ -79,13 +78,15 @@ export default function TrainingScenarioBar({ onScenarioChange }: TrainingScenar
       <div className="banner-top-line">
         <div className="banner-left">
           <span className="sim-pill">
-            <Sparkles size={12} /> SIMULATED TRAINING SCENARIO
+            <Sparkles size={13} />
+            <span>TRAINING DRILL</span>
           </span>
           <select
             value={scenarioId}
             onChange={(e) => handleScenarioSelect(e.target.value)}
             className="sim-scenario-select"
             disabled={isActive}
+            aria-label="Select training scenario"
           >
             {TRAINING_SCENARIOS.map((sc) => (
               <option key={sc.id} value={sc.id}>
@@ -99,35 +100,45 @@ export default function TrainingScenarioBar({ onScenarioChange }: TrainingScenar
           {!isActive ? (
             <button
               type="button"
-              className="button primary small-btn"
+              className="training-action-btn primary-drill-btn"
               onClick={handleStart}
             >
-              <Play size={13} /> Start Scenario
+              <Play size={13} /> Start Drill
             </button>
           ) : (
             <div className="active-sim-buttons">
               <button
                 type="button"
-                className="button outline small-btn"
+                className="training-action-btn ghost-drill-btn"
                 onClick={() => setIsPaused(!isPaused)}
+                title={isPaused ? "Resume drill" : "Pause drill"}
               >
                 {isPaused ? <Play size={13} /> : <Pause size={13} />}
                 <span>{isPaused ? "Resume" : "Pause"}</span>
               </button>
               <button
                 type="button"
-                className="button outline small-btn"
+                className="training-action-btn ghost-drill-btn"
                 onClick={handleRestart}
+                title="Restart drill from Step 1"
               >
                 <RotateCcw size={13} /> Restart
               </button>
               <button
                 type="button"
-                className="button primary small-btn"
+                className="training-action-btn primary-drill-btn"
                 onClick={handleNextStep}
               >
-                <span>{currentStep === totalSteps ? "Finish Simulation" : "Next Step"}</span>
+                <span>{currentStep === totalSteps ? "Finish Drill" : "Next Step"}</span>
                 <ChevronRight size={13} />
+              </button>
+              <button
+                type="button"
+                className="training-action-btn exit-drill-btn"
+                onClick={handleStop}
+                title="Exit training mode"
+              >
+                <X size={13} />
               </button>
             </div>
           )}
@@ -138,25 +149,21 @@ export default function TrainingScenarioBar({ onScenarioChange }: TrainingScenar
         <div className="sim-step-drawer">
           <div className="step-progress-row">
             <span className="step-counter">
-              STEP {currentStep} OF {totalSteps}: <strong>{stepObj.title}</strong>
+              STEP {currentStep}/{totalSteps}: <strong>{stepObj.title}</strong>
             </span>
-            <span className="patient-tag">Patient: {scenario.patientName}</span>
+            <span className="patient-tag">Crewmate: {scenario.patientName}</span>
           </div>
 
           <p className="step-desc">{stepObj.description}</p>
 
           <div className="step-directives-row">
             <div className="expected-action-pill">
-              <CheckCircle2 size={13} className="accent-mint" />
-              <span>
-                <strong>Required Action:</strong> {stepObj.expectedAction}
-              </span>
+              <CheckCircle2 size={13} />
+              <span><strong>Action:</strong> {stepObj.expectedAction}</span>
             </div>
             <div className="hint-pill">
-              <Info size={13} className="accent-cyan" />
-              <span>
-                <strong>Clinical Safety Hint:</strong> {stepObj.hint}
-              </span>
+              <Info size={13} />
+              <span><strong>Protocol Note:</strong> {stepObj.hint}</span>
             </div>
           </div>
         </div>

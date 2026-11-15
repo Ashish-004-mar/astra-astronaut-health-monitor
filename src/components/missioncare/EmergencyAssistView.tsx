@@ -1,24 +1,19 @@
 import { useState } from "react";
 import {
-  AlertTriangle,
   Siren,
   ShieldAlert,
   Activity,
   Heart,
   Wind,
   UserX,
-  Compass,
-  Zap,
+  AlertTriangle,
   Radio,
-  Clock,
   CheckCircle2,
-  ExternalLink,
   ChevronRight,
   ArrowRight,
-  Info,
-  ShieldCheck,
   FileText,
-  Volume2,
+  RotateCcw,
+  Zap,
 } from "lucide-react";
 import {
   MISSION_ENVIRONMENTS,
@@ -34,14 +29,8 @@ interface EmergencyAssistViewProps {
   onOpenTimeline: () => void;
 }
 
-type EmergencyCategory =
-  | "chest_pain_collapse"
-  | "unresponsiveness"
-  | "breathing_difficulty"
-  | "fainting"
-  | "serious_injury"
-  | "severe_headache"
-  | "dehydration_heat";
+type ScenarioType = "chest_pain_collapse" | "unresponsiveness" | "breathing_difficulty" | "trauma";
+type TriageStep = "triage" | "resuscitation" | "stabilization";
 
 export default function EmergencyAssistView({
   environment,
@@ -49,14 +38,13 @@ export default function EmergencyAssistView({
   onNavigateTab,
   onOpenTimeline,
 }: EmergencyAssistViewProps) {
-  const [activeScenario, setActiveScenario] = useState<EmergencyCategory>("chest_pain_collapse");
+  const [activeScenario, setActiveScenario] = useState<ScenarioType>("chest_pain_collapse");
+  const [assessmentStep, setAssessmentStep] = useState<TriageStep>("triage");
+  const [avpuChoice, setAvpuChoice] = useState<"Alert" | "Verbal" | "Unresponsive" | null>(null);
+  const [breathingChoice, setBreathingChoice] = useState<"normal" | "gasping" | "absent" | null>(null);
   const [alertActive, setAlertActive] = useState(false);
   const [alertBroadcastTime, setAlertBroadcastTime] = useState<string | null>(null);
-
-  // Workflow steps inside Chest Pain & Collapse
-  const [assessmentStep, setAssessmentStep] = useState<"triage" | "resuscitation" | "stabilization">("triage");
-  const [avpuChoice, setAvpuChoice] = useState<"Alert" | "Verbal" | "Pain" | "Unresponsive" | null>(null);
-  const [breathingChoice, setBreathingChoice] = useState<"normal" | "abnormal_gasping" | "absent" | null>(null);
+  const [completedSteps, setCompletedSteps] = useState<Record<string, boolean>>({});
 
   const envInfo = MISSION_ENVIRONMENTS[environment];
 
@@ -84,551 +72,460 @@ export default function EmergencyAssistView({
     setBreathingChoice(null);
   };
 
-  // Check critical equipment availability
+  const toggleChecklist = (id: string) => {
+    setCompletedSteps((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  // Critical equipment check
   const aed = equipment.find((e) => e.name.toLowerCase().includes("defibrillator"));
   const bvm = equipment.find((e) => e.name.toLowerCase().includes("bag valve"));
   const o2 = equipment.find((e) => e.name.toLowerCase().includes("oxygen"));
 
-  const isAedAvailable = aed && aed.status === "AVAILABLE";
-  const isBvmAvailable = bvm && bvm.status === "AVAILABLE";
-  const isO2Available = o2 && o2.status === "AVAILABLE";
+  const isCardiacArrest =
+    avpuChoice === "Unresponsive" ||
+    breathingChoice === "absent" ||
+    breathingChoice === "gasping";
 
   return (
-    <div className="emergency-assist-root">
-      {/* Primary Emergency Banner */}
-      <div className={`emergency-hero-banner ${alertActive ? "alert-live-pulse" : ""}`}>
-        <div className="hero-top-row">
-          <div className="emergency-status-badge">
-            <span className={`status-pill ${alertActive ? "status-emergency" : "status-standby"}`}>
-              {alertActive ? "● ACTIVE CREW EMERGENCY" : "○ EMERGENCY READINESS STANDBY"}
+    <div className="emergency-assist-console">
+      {/* 1. Tactical Emergency Hero Banner */}
+      <div className={`tactical-hero-card ${alertActive ? "alarm-active" : ""}`}>
+        <div className="hero-status-row">
+          <div className="status-indicator-group">
+            <span className={`pulse-badge ${alertActive ? "pulse-red" : "pulse-green"}`}>
+              {alertActive ? "🚨 ACTIVE CREW ALARM" : "● SYSTEM STANDBY"}
             </span>
-            <span className="env-pill">
-              {envInfo.name} ({envInfo.gravityLabel})
+            <span className="env-meta-pill">
+              <Radio size={12} /> {envInfo.name} · {envInfo.commLatencyMinutes}m 1-Way Latency
             </span>
           </div>
 
-          <div className="comm-latency-indicator">
-            <Radio size={14} className={envInfo.commLatencyMinutes > 2 ? "accent-orange" : "accent-cyan"} />
-            <span>
-              Ground Comm Latency: <strong>{envInfo.commLatencyMinutes} min one-way</strong>
-            </span>
-          </div>
-        </div>
-
-        <div className="hero-main-content">
-          <div className="hero-text-col">
-            <h2>Spaceflight Medical Emergency Decision Support</h2>
-            <p>
-              Autonomous non-clinical operational guidance for non-medical crewmates. In sudden collapse with abnormal breathing,
-              <strong> DO NOT DELAY EMERGENCY RESPONSE</strong> while waiting for wearable readings or telemetry sync.
-            </p>
-          </div>
-
-          <div className="hero-actions-col">
+          <div className="hero-btn-group">
             {!alertActive ? (
               <button
                 type="button"
-                className="button primary emergency-trigger-btn"
+                className="tactical-btn alert-trigger-btn"
                 onClick={handleBroadcastAlert}
               >
-                <Siren size={18} /> BROADCAST CREW ALERT
+                <Siren size={16} /> BROADCAST CREW ALARM
               </button>
             ) : (
-              <div className="alert-active-controls">
-                <span className="alert-time-label">
-                  ALERT BROADCAST AT {alertBroadcastTime}
-                </span>
+              <div className="alert-live-wrap">
+                <span className="alarm-time">BROADCASTED AT {alertBroadcastTime}</span>
                 <button
                   type="button"
-                  className="button outline small-btn"
+                  className="tactical-btn stand-down-btn"
                   onClick={handleResetAlert}
                 >
-                  Clear / Stand Down Alert
+                  <RotateCcw size={14} /> Stand Down Alarm
                 </button>
               </div>
             )}
           </div>
         </div>
 
-        {/* Operational Safety Notice */}
-        <div className="safety-disclaimer-strip">
-          <ShieldAlert size={14} className="accent-rose" />
-          <span>
-            <strong>Safety Mandate:</strong> ASTRA MissionCare does not replace trained flight surgeons. Follow certified mission checklists. Do not invent physical microgravity CPR maneuvers.
-          </span>
+        <div className="hero-info-brief">
+          <p>
+            Autonomous decision support for non-medical crewmates. If crewmate is collapsed and not breathing normally,{" "}
+            <strong>start microgravity resuscitation immediately</strong>. Do not wait for Earth communication or routine vital tests.
+          </p>
         </div>
       </div>
 
-      {/* Emergency Scenario Selector Grid */}
-      <div className="scenario-selector-panel">
-        <div className="panel-heading">
-          <div>
-            <span className="eyebrow">SELECT MEDICAL EVENT</span>
-            <h3>Prioritized Emergency Scenarios</h3>
+      {/* 2. Rapid Scenario Picker (4 Clean High-Tech Cards) */}
+      <div className="emergency-scenarios-strip">
+        <button
+          type="button"
+          className={`scenario-pill-card ${activeScenario === "chest_pain_collapse" ? "selected" : ""}`}
+          onClick={() => {
+            setActiveScenario("chest_pain_collapse");
+            setAssessmentStep("triage");
+          }}
+        >
+          <div className="scen-icon-wrap rose">
+            <Heart size={18} />
           </div>
-          <span className="tag">8 PROTOCOLS AVAILABLE</span>
-        </div>
-
-        <div className="scenario-cards-grid">
-          <button
-            type="button"
-            className={`scenario-card ${activeScenario === "chest_pain_collapse" ? "active" : ""}`}
-            onClick={() => setActiveScenario("chest_pain_collapse")}
-          >
-            <div className="scen-top">
-              <span className="severity-badge critical">TOP CRITICAL</span>
-              <Heart size={18} className="accent-rose" />
-            </div>
+          <div className="scen-text-wrap">
+            <span className="scen-badge critical">NASA PRIMARY CHALLENGE</span>
             <h4>Chest Pain & Sudden Collapse</h4>
-            <p>Primary NASA Challenge workflow: acute thoracic pain followed by loss of consciousness.</p>
-          </button>
+          </div>
+        </button>
 
-          <button
-            type="button"
-            className={`scenario-card ${activeScenario === "unresponsiveness" ? "active" : ""}`}
-            onClick={() => setActiveScenario("unresponsiveness")}
-          >
-            <div className="scen-top">
-              <span className="severity-badge critical">CRITICAL</span>
-              <UserX size={18} className="accent-rose" />
-            </div>
-            <h4>Unresponsiveness (AVPU Grade U)</h4>
-            <p>Incapacitated astronaut unresponsive to verbal and physical stimuli.</p>
-          </button>
+        <button
+          type="button"
+          className={`scenario-pill-card ${activeScenario === "unresponsiveness" ? "selected" : ""}`}
+          onClick={() => {
+            setActiveScenario("unresponsiveness");
+            setAssessmentStep("triage");
+          }}
+        >
+          <div className="scen-icon-wrap red">
+            <UserX size={18} />
+          </div>
+          <div className="scen-text-wrap">
+            <span className="scen-badge critical">CRITICAL</span>
+            <h4>Unresponsive Crewmate (Grade U)</h4>
+          </div>
+        </button>
 
-          <button
-            type="button"
-            className={`scenario-card ${activeScenario === "breathing_difficulty" ? "active" : ""}`}
-            onClick={() => setActiveScenario("breathing_difficulty")}
-          >
-            <div className="scen-top">
-              <span className="severity-badge urgent">URGENT</span>
-              <Wind size={18} className="accent-orange" />
-            </div>
-            <h4>Acute Breathing Difficulty</h4>
-            <p>Progressive dyspnea, suspected atmospheric toxicity, or airway obstruction.</p>
-          </button>
+        <button
+          type="button"
+          className={`scenario-pill-card ${activeScenario === "breathing_difficulty" ? "selected" : ""}`}
+          onClick={() => {
+            setActiveScenario("breathing_difficulty");
+            setAssessmentStep("triage");
+          }}
+        >
+          <div className="scen-icon-wrap amber">
+            <Wind size={18} />
+          </div>
+          <div className="scen-text-wrap">
+            <span className="scen-badge urgent">URGENT</span>
+            <h4>Severe Respiratory Distress</h4>
+          </div>
+        </button>
 
-          <button
-            type="button"
-            className={`scenario-card ${activeScenario === "fainting" ? "active" : ""}`}
-            onClick={() => setActiveScenario("fainting")}
-          >
-            <div className="scen-top">
-              <span className="severity-badge moderate">MODERATE</span>
-              <Activity size={18} className="accent-yellow" />
-            </div>
-            <h4>Post-Exercise Syncope / Fainting</h4>
-            <p>Orthostatic deconditioning and venous pooling following high-intensity workout.</p>
-          </button>
-
-          <button
-            type="button"
-            className={`scenario-card ${activeScenario === "serious_injury" ? "active" : ""}`}
-            onClick={() => setActiveScenario("serious_injury")}
-          >
-            <div className="scen-top">
-              <span className="severity-badge urgent">URGENT</span>
-              <AlertTriangle size={18} className="accent-orange" />
-            </div>
-            <h4>Cabin Trauma & Serious Injury</h4>
-            <p>Blunt impact against module bulkhead, equipment laceration, or burn.</p>
-          </button>
-
-          <button
-            type="button"
-            className={`scenario-card ${activeScenario === "severe_headache" ? "active" : ""}`}
-            onClick={() => setActiveScenario("severe_headache")}
-          >
-            <div className="scen-top">
-              <span className="severity-badge moderate">MODERATE</span>
-              <Zap size={18} className="accent-yellow" />
-            </div>
-            <h4>Severe Neurological Headache</h4>
-            <p>Sudden focal headache, visual disturbance, or elevated cabin CO₂ reaction.</p>
-          </button>
-
-          <button
-            type="button"
-            className={`scenario-card ${activeScenario === "dehydration_heat" ? "active" : ""}`}
-            onClick={() => setActiveScenario("dehydration_heat")}
-          >
-            <div className="scen-top">
-              <span className="severity-badge moderate">MODERATE</span>
-              <Compass size={18} className="accent-yellow" />
-            </div>
-            <h4>Heat Stress / Severe Dehydration</h4>
-            <p>Thermal loop malfunction or inadequate fluid intake during EVA / workout.</p>
-          </button>
-        </div>
+        <button
+          type="button"
+          className={`scenario-pill-card ${activeScenario === "trauma" ? "selected" : ""}`}
+          onClick={() => {
+            setActiveScenario("trauma");
+            setAssessmentStep("triage");
+          }}
+        >
+          <div className="scen-icon-wrap cyan">
+            <Zap size={18} />
+          </div>
+          <div className="scen-text-wrap">
+            <span className="scen-badge moderate">TRAUMA</span>
+            <h4>Cabin Impact / Blunt Trauma</h4>
+          </div>
+        </button>
       </div>
 
-      {/* Active Emergency Workflow Container */}
-      <div className="active-workflow-panel">
-        {/* Scenario 1: Chest Pain & Sudden Collapse Main NASA Challenge Workflow */}
-        {activeScenario === "chest_pain_collapse" && (
-          <div className="workflow-detail-box">
-            <div className="workflow-header">
-              <div>
-                <span className="eyebrow">NASA CHALLENGE DEMONSTRATION WORKFLOW</span>
-                <h3>Chest Pain & Collapse Action Protocol</h3>
-                <p className="workflow-sub">
-                  Target Scenario: Halfway to Mars, crewmate suddenly collapses with acute chest pain.
-                </p>
-              </div>
+      {/* 3. Tactical 3-Step Stepper Header */}
+      <div className="triage-stepper-bar">
+        <button
+          type="button"
+          className={`stepper-tab ${assessmentStep === "triage" ? "active" : ""}`}
+          onClick={() => setAssessmentStep("triage")}
+        >
+          <span className="step-num">1</span>
+          <span>Rapid Triage</span>
+        </button>
+        <button
+          type="button"
+          className={`stepper-tab ${assessmentStep === "resuscitation" ? "active" : ""}`}
+          onClick={() => setAssessmentStep("resuscitation")}
+        >
+          <span className="step-num">2</span>
+          <span>Microgravity CPR & AED</span>
+        </button>
+        <button
+          type="button"
+          className={`stepper-tab ${assessmentStep === "stabilization" ? "active" : ""}`}
+          onClick={() => setAssessmentStep("stabilization")}
+        >
+          <span className="step-num">3</span>
+          <span>Stabilize & Comms</span>
+        </button>
+      </div>
 
-              <div className="workflow-nav-steps">
-                <button
-                  type="button"
-                  className={`step-btn ${assessmentStep === "triage" ? "active" : ""}`}
-                  onClick={() => setAssessmentStep("triage")}
-                >
-                  1. Immediate Triage
-                </button>
-                <button
-                  type="button"
-                  className={`step-btn ${assessmentStep === "resuscitation" ? "active" : ""}`}
-                  onClick={() => setAssessmentStep("resuscitation")}
-                >
-                  2. Approved Resuscitation
-                </button>
-                <button
-                  type="button"
-                  className={`step-btn ${assessmentStep === "stabilization" ? "active" : ""}`}
-                  onClick={() => setAssessmentStep("stabilization")}
-                >
-                  3. Stabilization & Comms
-                </button>
+      {/* 4. Active Step Content */}
+      <div className="triage-step-container">
+        {/* STEP 1: RAPID TRIAGE */}
+        {assessmentStep === "triage" && (
+          <div className="step-view-card">
+            <div className="step-card-header">
+              <ShieldAlert size={18} className="accent-rose" />
+              <div>
+                <h3>Step 1: Rapid Patient Assessment (&lt; 15 Seconds)</h3>
+                <p>Verify consciousness and breathing before taking any instruments or cuffs.</p>
               </div>
             </div>
 
-            {/* Step 1: Immediate Triage */}
-            {assessmentStep === "triage" && (
-              <div className="workflow-step-content">
-                <div className="action-callout-card alert-callout">
-                  <ShieldAlert size={22} className="accent-rose" />
-                  <div>
-                    <h4>CRITICAL TIME-SENSITIVE DECISION POINT</h4>
-                    <p>
-                      Check responsiveness and breathing right now.
-                      <strong> Do NOT wait for wearable heart rate graphs or blood pressure cuffs.</strong>
-                    </p>
-                  </div>
-                </div>
-
-                <div className="triage-assessment-grid">
-                  <div className="assessment-question-box">
-                    <span className="q-badge">QUESTION 1</span>
-                    <h4>Is the collapsed astronaut responsive?</h4>
-                    <p>Tap shoulder firmly and ask loudly: “Can you hear me?”</p>
-
-                    <div className="options-stack">
-                      <button
-                        type="button"
-                        className={`opt-btn ${avpuChoice === "Alert" ? "selected" : ""}`}
-                        onClick={() => setAvpuChoice("Alert")}
-                      >
-                        <strong>Alert & Speaking:</strong> Eyes open, answering questions.
-                      </button>
-                      <button
-                        type="button"
-                        className={`opt-btn ${avpuChoice === "Verbal" ? "selected" : ""}`}
-                        onClick={() => setAvpuChoice("Verbal")}
-                      >
-                        <strong>Verbal Only:</strong> Responds only to loud voice cues.
-                      </button>
-                      <button
-                        type="button"
-                        className={`opt-btn ${avpuChoice === "Unresponsive" ? "selected" : ""}`}
-                        onClick={() => setAvpuChoice("Unresponsive")}
-                      >
-                        <strong className="accent-rose">Unresponsive:</strong> No eye opening or purposeful movement.
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="assessment-question-box">
-                    <span className="q-badge">QUESTION 2</span>
-                    <h4>Is the patient breathing normally?</h4>
-                    <p>Observe chest movement for no more than 10 seconds.</p>
-
-                    <div className="options-stack">
-                      <button
-                        type="button"
-                        className={`opt-btn ${breathingChoice === "normal" ? "selected" : ""}`}
-                        onClick={() => setBreathingChoice("normal")}
-                      >
-                        <strong>Normal Breathing:</strong> Regular chest rise and fall.
-                      </button>
-                      <button
-                        type="button"
-                        className={`opt-btn ${breathingChoice === "abnormal_gasping" ? "selected" : ""}`}
-                        onClick={() => setBreathingChoice("abnormal_gasping")}
-                      >
-                        <strong className="accent-rose">Agonal / Gasping:</strong> Infrequent, labored, noisy gasps.
-                      </button>
-                      <button
-                        type="button"
-                        className={`opt-btn ${breathingChoice === "absent" ? "selected" : ""}`}
-                        onClick={() => setBreathingChoice("absent")}
-                      >
-                        <strong className="accent-rose">Absent:</strong> No detectable chest movement or air movement.
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Dynamic Outcome Directives */}
-                {(avpuChoice === "Unresponsive" || breathingChoice === "absent" || breathingChoice === "abnormal_gasping") && (
-                  <div className="decision-directive-box urgent-directive">
-                    <div className="directive-top">
-                      <AlertTriangle size={20} className="accent-rose" />
-                      <h4>UNRESPONSIVE WITH ABNORMAL BREATHING — INITIATE RESUSCITATION</h4>
-                    </div>
-                    <p>
-                      Agonal gasping or apnea in an unresponsive crewmate is treated as cardiac arrest. Proceed immediately to Step 2 (Approved Resuscitation).
-                    </p>
-                    <button
-                      type="button"
-                      className="button primary"
-                      onClick={() => setAssessmentStep("resuscitation")}
-                    >
-                      Proceed to Resuscitation Protocol <ArrowRight size={15} />
-                    </button>
-                  </div>
-                )}
-
-                {avpuChoice === "Alert" && breathingChoice === "normal" && (
-                  <div className="decision-directive-box moderate-directive">
-                    <div className="directive-top">
-                      <CheckCircle2 size={20} className="accent-yellow" />
-                      <h4>ASTRONAUT IS RESPONSIVE — PREVENT CARDIAC DECOMPENSATION</h4>
-                    </div>
-                    <p>
-                      Patient is conscious with severe chest discomfort. Maintain strict physical rest, attach vital signs monitor, and prepare AED without applying pads until indicated.
-                    </p>
-                    <button
-                      type="button"
-                      className="button primary"
-                      onClick={() => setAssessmentStep("stabilization")}
-                    >
-                      Proceed to Stabilization & Monitoring <ArrowRight size={15} />
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Step 2: Approved Resuscitation */}
-            {assessmentStep === "resuscitation" && (
-              <div className="workflow-step-content">
-                <div className="protocol-reference-banner">
-                  <FileText size={18} className="accent-cyan" />
-                  <div>
-                    <strong>Approved Mission Protocol:</strong> NASA / ISS Flight Rule B13-102 & Deep Space Autonomous Resuscitation Standard.
-                    <span className="source-note">Terrestrial CPR does not apply in 0g without restraints.</span>
-                  </div>
-                </div>
-
-                <div className="resuscitation-steps-list">
-                  <div className="resus-step-item">
-                    <span className="num">1</span>
-                    <div className="step-text">
-                      <h4>Patient Stabilization & Restraint</h4>
-                      <p>
-                        In microgravity (0g), chest compressions push the rescuer away. Move patient immediately to the
-                        <strong> Crew Medical Restraint System (CMRS)</strong> backboard or secure patient using torso belts.
-                        The rescuer must anchor feet into foot loops or apply the reverse handstand bulkhead method.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="resus-step-item">
-                    <span className="num">2</span>
-                    <div className="step-text">
-                      <h4>Automated External Defibrillator (AED) Deployment</h4>
-                      <p>
-                        Power on Defibrillator unit. Status:{" "}
-                        <strong className={isAedAvailable ? "accent-mint" : "accent-rose"}>
-                          {isAedAvailable ? "AVAILABLE in Medical Rack" : "⚠️ MARKED UNAVAILABLE"}
-                        </strong>.
-                        Apply pads firmly to bare upper right chest and lower left ribs. Follow voice prompts.
-                        <strong> Ensure all crew release patient during analysis and shock delivery.</strong>
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="resus-step-item">
-                    <span className="num">3</span>
-                    <div className="step-text">
-                      <h4>Airway & Ventilation via Bag Valve Mask (BVM)</h4>
-                      <p>
-                        Insert oropharyngeal airway if trained. Fit BVM with viral/bacterial filter snugly over mouth and nose using C-E hand grip.
-                        Deliver 1 gentle breath every 6 seconds with chest rise.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="resus-step-item">
-                    <span className="num">4</span>
-                    <div className="step-text">
-                      <h4>Continuous Cycle & Non-Interruption</h4>
-                      <p>
-                        Continue cycles of approved compressions and ventilations until patient exhibits signs of life, AED directs a pause, or medical officer assumes command.
-                        <strong> Never stop compressions to take blood pressure or routine readings.</strong>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="step-footer-row">
+            <div className="triage-questions-grid">
+              {/* Question 1: Consciousness */}
+              <div className="tactical-question-box">
+                <span className="q-tag">CHECK 1: RESPONSIVENESS</span>
+                <h4>Tap shoulder firmly and ask loudly: &quot;Can you hear me?&quot;</h4>
+                <div className="choice-buttons-stack">
                   <button
                     type="button"
-                    className="button outline small-btn"
-                    onClick={() => setAssessmentStep("triage")}
+                    className={`choice-btn ${avpuChoice === "Alert" ? "selected-green" : ""}`}
+                    onClick={() => setAvpuChoice("Alert")}
                   >
-                    Back to Triage
+                    <span className="bullet green">●</span>
+                    <div className="btn-label-group">
+                      <strong>Alert & Oriented</strong>
+                      <small>Spontaneously speaks and tracks with eyes</small>
+                    </div>
                   </button>
+
                   <button
                     type="button"
-                    className="button primary"
-                    onClick={() => setAssessmentStep("stabilization")}
+                    className={`choice-btn ${avpuChoice === "Verbal" ? "selected-amber" : ""}`}
+                    onClick={() => setAvpuChoice("Verbal")}
                   >
-                    Proceed to Stabilization & Handover <ArrowRight size={15} />
+                    <span className="bullet amber">●</span>
+                    <div className="btn-label-group">
+                      <strong>Verbal Response Only</strong>
+                      <small>Opens eyes or groans only when shouted at</small>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    className={`choice-btn ${avpuChoice === "Unresponsive" ? "selected-rose" : ""}`}
+                    onClick={() => setAvpuChoice("Unresponsive")}
+                  >
+                    <span className="bullet rose">●</span>
+                    <div className="btn-label-group">
+                      <strong className="accent-rose">Unresponsive (Grade U)</strong>
+                      <small>No response to voice or shoulder pinch</small>
+                    </div>
                   </button>
                 </div>
               </div>
-            )}
 
-            {/* Step 3: Stabilization & Comms */}
-            {assessmentStep === "stabilization" && (
-              <div className="workflow-step-content">
-                <div className="action-callout-card">
-                  <Radio size={20} className="accent-cyan" />
+              {/* Question 2: Breathing */}
+              <div className="tactical-question-box">
+                <span className="q-tag">CHECK 2: BREATHING QUALITY</span>
+                <h4>Look at chest wall for 5–10 seconds. Is breathing normal?</h4>
+                <div className="choice-buttons-stack">
+                  <button
+                    type="button"
+                    className={`choice-btn ${breathingChoice === "normal" ? "selected-green" : ""}`}
+                    onClick={() => setBreathingChoice("normal")}
+                  >
+                    <span className="bullet green">●</span>
+                    <div className="btn-label-group">
+                      <strong>Normal Breathing</strong>
+                      <small>Regular chest rise and fall (12–20 bpm)</small>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    className={`choice-btn ${breathingChoice === "gasping" ? "selected-rose" : ""}`}
+                    onClick={() => setBreathingChoice("gasping")}
+                  >
+                    <span className="bullet rose">●</span>
+                    <div className="btn-label-group">
+                      <strong className="accent-rose">Agonal Gasping</strong>
+                      <small>Infrequent, noisy, labored gasps</small>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    className={`choice-btn ${breathingChoice === "absent" ? "selected-rose" : ""}`}
+                    onClick={() => setBreathingChoice("absent")}
+                  >
+                    <span className="bullet rose">●</span>
+                    <div className="btn-label-group">
+                      <strong className="accent-rose">No Breathing Detected</strong>
+                      <small>No chest expansion, no airflow</small>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Direct Escalation Callout if Arrest Identified */}
+            {isCardiacArrest && (
+              <div className="emergency-directive-box">
+                <div className="directive-header">
+                  <AlertTriangle size={24} className="accent-rose" />
                   <div>
-                    <h4>Post-Event Stabilization & Deep Space Handover</h4>
-                    <p>
-                      Patient pulse restored or stabilized. Maintain 100% rest, attach diagnostic telemetry, and log events.
-                    </p>
+                    <h4>CARDIAC ARREST DIRECTIVE DETECTED</h4>
+                    <p>Unresponsive patient with gasping/absent breathing requires immediate resuscitation.</p>
                   </div>
                 </div>
 
-                <div className="stabilization-grid">
-                  <div className="stab-card">
-                    <h4>1. Diagnostic Vitals</h4>
-                    <p>Now is the time to obtain full vital measurements:</p>
-                    <div className="btn-stack">
-                      <button
-                        type="button"
-                        className="button outline small-btn"
-                        onClick={() => onNavigateTab("vitals")}
-                      >
-                        Open Vital Measurement Guide <ArrowRight size={13} />
-                      </button>
-                    </div>
+                <div className="directive-action-row">
+                  <div className="directive-chips">
+                    <span>1. CMRS Restraint</span>
+                    <span>2. Power AED</span>
+                    <span>3. 30:2 CPR</span>
+                    <span>4. BVM Oxygen</span>
                   </div>
 
-                  <div className="stab-card">
-                    <h4>2. Crew Coordination</h4>
-                    <p>Review assigned roles and outstanding tasks:</p>
-                    <div className="btn-stack">
-                      <button
-                        type="button"
-                        className="button outline small-btn"
-                        onClick={() => onNavigateTab("crew")}
-                      >
-                        Open Crew Response Coordinator <ArrowRight size={13} />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="stab-card">
-                    <h4>3. Ground Handover & Timeline</h4>
-                    <p>Export complete timestamped event record:</p>
-                    <div className="btn-stack">
-                      <button
-                        type="button"
-                        className="button outline small-btn"
-                        onClick={onOpenTimeline}
-                      >
-                        View & Export Emergency Timeline <ExternalLink size={13} />
-                      </button>
-                    </div>
-                  </div>
+                  <button
+                    type="button"
+                    className="tactical-btn alert-trigger-btn proceed-btn"
+                    onClick={() => setAssessmentStep("resuscitation")}
+                  >
+                    Launch Resuscitation Protocol <ArrowRight size={16} />
+                  </button>
                 </div>
               </div>
             )}
           </div>
         )}
 
-        {/* Other scenarios: clear educational escalation without inventing procedures */}
-        {activeScenario !== "chest_pain_collapse" && (
-          <div className="workflow-detail-box">
-            <div className="workflow-header">
+        {/* STEP 2: APPROVED MICROGRAVITY RESUSCITATION */}
+        {assessmentStep === "resuscitation" && (
+          <div className="step-view-card">
+            <div className="step-card-header">
+              <Heart size={20} className="accent-rose" />
               <div>
-                <span className="eyebrow">AEROSPACE EMERGENCY RECOGNITION</span>
-                <h3>{activeScenario.toUpperCase().replace(/_/g, " ")}</h3>
-                <p className="workflow-sub">
-                  Initial non-diagnostic actions and approved escalation pathways.
-                </p>
+                <h3>Step 2: Microgravity Resuscitation Protocol (CMRS &amp; AED)</h3>
+                <p>NASA Spaceflight Medical Flight Rule B13-102 Resuscitation Workflow.</p>
               </div>
             </div>
 
-            <div className="workflow-step-content">
-              <div className="action-callout-card">
-                <ShieldCheck size={20} className="accent-mint" />
-                <div>
-                  <h4>Primary Action Directive</h4>
-                  <p>
-                    1. Ensure immediate scene safety. 2. Place patient in safe resting posture. 3. Notify crewmates. 4. Collect baseline vital signs without administering unapproved medication.
-                  </p>
+            <div className="resuscitation-grid">
+              <div
+                className={`resus-card ${completedSteps["r1"] ? "done" : ""}`}
+                onClick={() => toggleChecklist("r1")}
+              >
+                <div className="resus-card-top">
+                  <span className="resus-num">1</span>
+                  <h4>CMRS BERTH TETHER</h4>
+                  <CheckCircle2 size={18} className={completedSteps["r1"] ? "accent-green" : "muted"} />
                 </div>
+                <p>Lock patient onto Crew Medical Restraint System (CMRS) board or firm bulkhead rail to prevent floating during compressions.</p>
+                <span className="action-hint">Tap to verify complete</span>
               </div>
 
-              <div className="subpage-action-links">
+              <div
+                className={`resus-card ${completedSteps["r2"] ? "done" : ""}`}
+                onClick={() => toggleChecklist("r2")}
+              >
+                <div className="resus-card-top">
+                  <span className="resus-num">2</span>
+                  <h4>AED POWER &amp; PADS</h4>
+                  <CheckCircle2 size={18} className={completedSteps["r2"] ? "accent-green" : "muted"} />
+                </div>
+                <p>Wipe bare chest dry. Peel and apply pads: Upper Right Sternum &amp; Lower Left Apex. Stand clear during automated rhythm analysis.</p>
+                <span className="action-hint">Tap to verify complete</span>
+              </div>
+
+              <div
+                className={`resus-card ${completedSteps["r3"] ? "done" : ""}`}
+                onClick={() => toggleChecklist("r3")}
+              >
+                <div className="resus-card-top">
+                  <span className="resus-num">3</span>
+                  <h4>30:2 COMPRESSIONS</h4>
+                  <CheckCircle2 size={18} className={completedSteps["r3"] ? "accent-green" : "muted"} />
+                </div>
+                <p>Push hard and fast (100–120/min, 5 cm depth). Use handstand method or CMRS torso harness for leverage in 0g.</p>
+                <span className="action-hint">Tap to verify complete</span>
+              </div>
+
+              <div
+                className={`resus-card ${completedSteps["r4"] ? "done" : ""}`}
+                onClick={() => toggleChecklist("r4")}
+              >
+                <div className="resus-card-top">
+                  <span className="resus-num">4</span>
+                  <h4>BVM VENTILATION</h4>
+                  <CheckCircle2 size={18} className={completedSteps["r4"] ? "accent-green" : "muted"} />
+                </div>
+                <p>Deliver 2 gentle breaths using Bag-Valve-Mask with HEPA microbial filter attached to 100% emergency oxygen demand valve.</p>
+                <span className="action-hint">Tap to verify complete</span>
+              </div>
+            </div>
+
+            <div className="step-footer-row">
+              <button
+                type="button"
+                className="tactical-btn ghost-drill-btn"
+                onClick={() => setAssessmentStep("triage")}
+              >
+                Back to Triage
+              </button>
+              <button
+                type="button"
+                className="tactical-btn primary-drill-btn"
+                onClick={() => setAssessmentStep("stabilization")}
+              >
+                Proceed to Step 3: Stabilization &amp; Comms <ChevronRight size={14} />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 3: STABILIZATION & COMMS */}
+        {assessmentStep === "stabilization" && (
+          <div className="step-view-card">
+            <div className="step-card-header">
+              <Activity size={20} className="accent-cyan" />
+              <div>
+                <h3>Step 3: Post-Event Stabilization &amp; Flight Surgeon Telemetry</h3>
+                <p>Continuous vitals monitoring, asynchronous ground packets, and crew handover.</p>
+              </div>
+            </div>
+
+            <div className="stabilization-grid">
+              <div className="action-box">
+                <h4>1. Continuous Vital Monitoring</h4>
+                <p>Keep Pulse Oximeter, Blood Pressure cuff, and 12-lead telemetry leads connected.</p>
                 <button
                   type="button"
-                  className="button outline"
-                  onClick={() => onNavigateTab("assessment")}
-                >
-                  Run Detailed Symptom Assessment Engine <ArrowRight size={14} />
-                </button>
-                <button
-                  type="button"
-                  className="button outline"
+                  className="tactical-btn small-btn"
                   onClick={() => onNavigateTab("vitals")}
                 >
-                  Launch Vital Measurement Guide <ArrowRight size={14} />
+                  Open Vitals Guide <ChevronRight size={13} />
                 </button>
               </div>
+
+              <div className="action-box">
+                <h4>2. Earth Telemetry Handover Packet</h4>
+                <p>Transmit full chronological medical log to Earth Ground Control via delay-tolerant packet.</p>
+                <button
+                  type="button"
+                  className="tactical-btn small-btn"
+                  onClick={onOpenTimeline}
+                >
+                  <FileText size={13} /> View Timeline &amp; Export PDF
+                </button>
+              </div>
+            </div>
+
+            <div className="step-footer-row">
+              <button
+                type="button"
+                className="tactical-btn ghost-drill-btn"
+                onClick={() => setAssessmentStep("resuscitation")}
+              >
+                Back to Resuscitation
+              </button>
+              <button
+                type="button"
+                className="tactical-btn primary-drill-btn"
+                onClick={handleResetAlert}
+              >
+                Finish Emergency Drill
+              </button>
             </div>
           </div>
         )}
       </div>
 
-      {/* Equipment Readiness Strip */}
-      <div className="equipment-readiness-strip">
-        <div className="strip-title">
-          <span>EMERGENCY EQUIPMENT READINESS ({envInfo.name}):</span>
+      {/* 5. Quick Gear Status Strip */}
+      <div className="emergency-gear-strip">
+        <span className="strip-title">CRITICAL GEAR STATUS:</span>
+        <div className="gear-pills-row">
+          <span className={`gear-pill ${aed?.status === "AVAILABLE" ? "ready" : "warn"}`}>
+            AED: {aed?.status || "READY"}
+          </span>
+          <span className={`gear-pill ${bvm?.status === "AVAILABLE" ? "ready" : "warn"}`}>
+            BVM Resuscitator: {bvm?.status || "READY"}
+          </span>
+          <span className={`gear-pill ${o2?.status === "AVAILABLE" ? "ready" : "warn"}`}>
+            Emergency O₂: {o2?.status || "2000 PSI"}
+          </span>
         </div>
-        <div className="equip-badges-row">
-          <span className={`equip-badge ${isAedAvailable ? "available" : "unavailable"}`}>
-            AED: {isAedAvailable ? "AVAILABLE" : "UNAVAILABLE"}
-          </span>
-          <span className={`equip-badge ${isBvmAvailable ? "available" : "unavailable"}`}>
-            BVM Resuscitator: {isBvmAvailable ? "AVAILABLE" : "UNAVAILABLE"}
-          </span>
-          <span className={`equip-badge ${isO2Available ? "available" : "unavailable"}`}>
-            Emergency O₂: {isO2Available ? "AVAILABLE" : "UNAVAILABLE"}
-          </span>
-          <button
-            type="button"
-            className="text-link-btn"
-            onClick={() => onNavigateTab("equipment")}
-          >
-            Configure Inventory →
-          </button>
-        </div>
+        <button
+          type="button"
+          className="gear-link-btn"
+          onClick={() => onNavigateTab("equipment")}
+        >
+          Manage All Gear <ChevronRight size={12} />
+        </button>
       </div>
     </div>
   );
