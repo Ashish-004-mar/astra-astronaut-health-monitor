@@ -7519,3 +7519,745 @@ small {
   border-radius: 4px;
 }
 
+
+/* =====================================================================
+   ASTRA MISSIONCARE - SPACE MEDICAL EMERGENCY ASSISTANCE SYSTEM
+   ===================================================================== */
+
+.missioncare-page-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.missioncare-nav-pill-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 12px;
+  background: rgba(14, 25, 38, 0.7);
+  border: 1px solid rgba(80, 180, 210, 0.2);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  scrollbar-width: thin;
+}
+
+.missioncare-nav-pill-bar .nav-pill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.missioncare-nav-pill-bar .nav-pill:hover {
+  color: #e2f4f8;
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.2);
+}
+
+.missioncare-nav-pill-bar .nav-pill.active {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.18);
+  border-color: rgba(56, 189, 248, 0.4);
+  font-weight: 600;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.15);
+}
+
+.emergency-callout-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: linear-gradient(90deg, rgba(239, 68, 68, 0.18) 0%, rgba(220, 38, 38, 0.08) 100%);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 10px;
+  color: #fecaca;
+  font-size: 13px;
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.12);
+}
+
+.emergency-callout-strip .callout-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #dc2626;
+  color: #ffffff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.emergency-callout-strip .callout-btn:hover {
+  background: #ef4444;
+}
+
+/* Hero Banners */
+.emergency-hero-banner {
+  background: linear-gradient(135deg, rgba(30, 18, 25, 0.85) 0%, rgba(14, 25, 38, 0.9) 100%);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 14px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+.emergency-hero-banner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: #ef4444;
+}
+
+.emergency-hero-banner h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #f87171;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Scenario Cards */
+.scenario-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.scenario-card {
+  background: rgba(14, 26, 40, 0.65);
+  border: 1px solid rgba(80, 180, 210, 0.2);
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.scenario-card:hover {
+  border-color: rgba(56, 189, 248, 0.45);
+  transform: translateY(-2px);
+  background: rgba(18, 32, 50, 0.8);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.scenario-card.critical {
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(35, 16, 22, 0.5);
+}
+
+.scenario-card.critical:hover {
+  border-color: rgba(239, 68, 68, 0.7);
+  box-shadow: 0 0 18px rgba(239, 68, 68, 0.2);
+}
+
+.scenario-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.scenario-card h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #f1f5f9;
+}
+
+.scenario-card p {
+  margin: 0;
+  font-size: 13px;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+/* Triage Step Cards */
+.triage-flow-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.triage-step-card {
+  background: rgba(14, 26, 42, 0.75);
+  border: 1px solid rgba(80, 180, 210, 0.25);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.triage-step-card.active-step {
+  border-color: #38bdf8;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.18);
+}
+
+.triage-step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(56, 189, 248, 0.2);
+  border: 1px solid #38bdf8;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* Vital Guides */
+.vitals-guide-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.vitals-tabs-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.vital-tab-btn {
+  padding: 8px 14px;
+  background: rgba(16, 28, 42, 0.6);
+  border: 1px solid rgba(80, 180, 210, 0.2);
+  border-radius: 8px;
+  color: #94a3b8;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.vital-tab-btn.active {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.vitals-split-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .vitals-split-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.vital-guide-panel,
+.vital-input-panel {
+  background: rgba(14, 25, 40, 0.7);
+  border: 1px solid rgba(80, 180, 210, 0.22);
+  border-radius: 14px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.vital-gauge-box {
+  background: rgba(10, 18, 30, 0.85);
+  border: 1px solid rgba(80, 180, 210, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.vital-val-display {
+  font-size: 32px;
+  font-weight: 700;
+  color: #38bdf8;
+  font-family: monospace;
+}
+
+/* Symptom Assessment */
+.symptom-assessment-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.assessment-layout-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .assessment-layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.question-card {
+  background: rgba(14, 25, 40, 0.7);
+  border: 1px solid rgba(80, 180, 210, 0.22);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.options-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(18, 32, 50, 0.6);
+  border: 1px solid rgba(80, 180, 210, 0.2);
+  border-radius: 8px;
+  color: #e2f4f8;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.option-btn:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.option-btn.selected {
+  background: rgba(56, 189, 248, 0.25);
+  border-color: #38bdf8;
+  font-weight: 600;
+}
+
+.escalation-result-card {
+  background: rgba(14, 25, 40, 0.85);
+  border: 1px solid rgba(80, 180, 210, 0.25);
+  border-radius: 14px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.escalation-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.escalation-badge.emergency {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid #ef4444;
+  color: #fca5a5;
+}
+
+.escalation-badge.urgent {
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid #f59e0b;
+  color: #fcd34d;
+}
+
+.escalation-badge.routine {
+  background: rgba(34, 197, 94, 0.2);
+  border: 1px solid #22c55e;
+  color: #86efac;
+}
+
+/* Mission Environment */
+.mission-env-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.env-selector-tabs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.env-tab-card {
+  background: rgba(14, 25, 40, 0.65);
+  border: 1px solid rgba(80, 180, 210, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all 0.2s;
+}
+
+.env-tab-card:hover {
+  background: rgba(20, 36, 56, 0.75);
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.env-tab-card.active {
+  background: rgba(22, 42, 66, 0.85);
+  border-color: #38bdf8;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.15);
+}
+
+.mars-latency-card {
+  background: linear-gradient(135deg, rgba(38, 22, 16, 0.8) 0%, rgba(18, 28, 44, 0.8) 100%);
+  border: 1px solid rgba(249, 115, 22, 0.4);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Crew Response */
+.crew-response-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.crew-roles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.crew-role-card {
+  background: rgba(14, 25, 40, 0.7);
+  border: 1px solid rgba(80, 180, 210, 0.22);
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checklist-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(18, 30, 46, 0.5);
+  border: 1px solid rgba(80, 180, 210, 0.15);
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.checklist-item:hover {
+  background: rgba(22, 38, 58, 0.7);
+}
+
+.checklist-item.done {
+  opacity: 0.7;
+  text-decoration: line-through;
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+/* Equipment */
+.emergency-equipment-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.equipment-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.equipment-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 16px;
+}
+
+.equipment-card {
+  background: rgba(14, 25, 40, 0.7);
+  border: 1px solid rgba(80, 180, 210, 0.22);
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.available {
+  background: rgba(34, 197, 94, 0.18);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  color: #86efac;
+}
+
+.status-badge.in-use {
+  background: rgba(245, 158, 11, 0.18);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fcd34d;
+}
+
+.status-badge.maintenance {
+  background: rgba(239, 68, 68, 0.18);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.status-badge.unavailable {
+  background: rgba(148, 163, 184, 0.18);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  color: #cbd5e1;
+}
+
+/* Timeline */
+.emergency-timeline-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.timeline-stream-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  padding-left: 20px;
+}
+
+.timeline-stream-container::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: rgba(80, 180, 210, 0.2);
+}
+
+.timeline-item {
+  background: rgba(14, 25, 40, 0.7);
+  border: 1px solid rgba(80, 180, 210, 0.2);
+  border-radius: 10px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+
+.timeline-item::after {
+  content: "";
+  position: absolute;
+  left: -20px;
+  top: 18px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #38bdf8;
+  border: 2px solid #071015;
+}
+
+/* Reminders */
+.health-reminders-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.reminders-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reminder-card {
+  background: rgba(14, 25, 40, 0.7);
+  border: 1px solid rgba(80, 180, 210, 0.22);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  transition: all 0.2s;
+}
+
+.reminder-card:hover {
+  background: rgba(18, 32, 50, 0.8);
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+/* Resources */
+.offline-resources-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.resource-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.resource-card {
+  background: rgba(14, 25, 40, 0.7);
+  border: 1px solid rgba(80, 180, 210, 0.22);
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.resource-card:hover {
+  background: rgba(18, 32, 50, 0.85);
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+/* Training Scenario Bar */
+.training-scenario-banner {
+  background: linear-gradient(90deg, rgba(30, 24, 46, 0.9) 0%, rgba(16, 28, 46, 0.9) 100%);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.15);
+}
+
+.training-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(168, 85, 247, 0.2);
+  border: 1px solid rgba(168, 85, 247, 0.5);
+  color: #d8b4fe;
+}
+
+/* Modals */
+.missioncare-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 9, 15, 0.82);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.missioncare-modal-card {
+  background: #0d1b2a;
+  border: 1px solid rgba(80, 180, 210, 0.35);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 640px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  animation: modalEnter 0.2s ease-out;
+}
+
+.missioncare-modal-header {
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(80, 180, 210, 0.2);
+  background: rgba(16, 32, 50, 0.6);
+}
+
+.missioncare-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.missioncare-modal-footer {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid rgba(80, 180, 210, 0.2);
+  background: rgba(12, 24, 38, 0.6);
+}

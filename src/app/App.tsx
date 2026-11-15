@@ -6,6 +6,7 @@ import {
   Orbit,
   ClipboardCheck,
   Brain,
+  ShieldAlert,
   Settings as SettingsIcon,
   ArrowUpRight,
   Radio,
@@ -17,6 +18,7 @@ import Overview from "../pages/Overview";
 import { MyHealth, Checkin, Space, Settings } from "../pages/Pages";
 import Nutrition from "../pages/Nutrition";
 import MindSpace from "../pages/MindSpace";
+import MissionCare from "../pages/MissionCare";
 import CinematicLanding from "../components/landing/CinematicLanding";
 import AstraVoicePanel from "../voice/AstraVoicePanel";
 import { audioAlertService, type ActiveAlert } from "../services/audioAlertService";
@@ -30,6 +32,7 @@ const nav = [
   { name: "Space", icon: Orbit },
   { name: "Check-in", icon: ClipboardCheck },
   { name: "MindSpace", icon: Brain },
+  { name: "MissionCare", icon: ShieldAlert },
   { name: "Settings", icon: SettingsIcon },
 ];
 export default function App() {
@@ -72,6 +75,14 @@ export default function App() {
         if (parts[1]) setSubpage(parts[1]);
       } else if (hash.startsWith("mindspace") || hash.startsWith("mind")) {
         setPage("MindSpace");
+        const parts = hash.split("/");
+        if (parts[1]) setSubpage(parts[1]);
+      } else if (
+        hash.startsWith("missioncare") ||
+        hash.startsWith("care") ||
+        hash.startsWith("emergency")
+      ) {
+        setPage("MissionCare");
         const parts = hash.split("/");
         if (parts[1]) setSubpage(parts[1]);
       } else if (hash.startsWith("settings")) {
@@ -221,7 +232,9 @@ export default function App() {
                       ? "ASTRA / CREW WELLNESS"
                       : page === "MindSpace"
                         ? "ASTRA / CREW RESILIENCE"
-                        : "ASTRA / MISSION SUPPORT"}
+                        : page === "MissionCare"
+                          ? "ASTRA / MEDICAL DECISION SUPPORT"
+                          : "ASTRA / MISSION SUPPORT"}
                 </div>
                 <h1>
                   {page === "Overview"
@@ -236,7 +249,9 @@ export default function App() {
                             ? "Your daily check-in."
                             : page === "MindSpace"
                               ? "Mental wellness & recovery."
-                              : "Your mission, your settings."}
+                              : page === "MissionCare"
+                                ? "Space medical emergency assistance."
+                                : "Your mission, your settings."}
                 </h1>
                 <p>
                   {page === "Overview"
@@ -251,7 +266,9 @@ export default function App() {
                             ? "Take a minute. Listen to yourself."
                             : page === "MindSpace"
                               ? "Autonomous stress recovery, team harmony, and cognitive resilience in deep space."
-                              : "A transparent, personal experience."}
+                              : page === "MissionCare"
+                                ? "Autonomous medical triage, vital measurement guidance, crew response coordination, and emergency decision support."
+                                : "A transparent, personal experience."}
                 </p>
               </div>
               <span className="mission-badge">
@@ -272,6 +289,8 @@ export default function App() {
               <Checkin />
             ) : page === "MindSpace" ? (
               <MindSpace subpage={subpage} setSubpage={setSubpage} />
+            ) : page === "MissionCare" ? (
+              <MissionCare subpage={subpage} setSubpage={setSubpage} />
             ) : (
               <Settings />
             )}
