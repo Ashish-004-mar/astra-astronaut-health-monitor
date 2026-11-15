@@ -12,17 +12,33 @@
 
 <br />
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue.svg?logo=typescript)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-19.0-61dafb.svg?logo=react)](https://react.dev/)
+[![Live App](https://img.shields.io/badge/Embarko-Live%20Deployed-00F0FF.svg?style=for-the-badge&logo=rocket&logoColor=black)](https://astra-health-monitor.embarko.app)
+[![GitHub Pages](https://img.shields.io/badge/Showcase-Live%203D-7928CA.svg?style=for-the-badge&logo=three.js&logoColor=white)](https://Ashish-004-mar.github.io/astra-astronaut-health-monitor/)
+[![Vitest](https://img.shields.io/badge/Vitest-77%20Passed-brightgreen.svg?style=for-the-badge&logo=vitest)](https://vitest.dev/)
+
+<br />
+
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg?logo=typescript)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19.1-61dafb.svg?logo=react)](https://react.dev/)
 [![Three.js](https://img.shields.io/badge/Three.js-R3F-black.svg?logo=three.js)](https://threejs.org/)
 [![Vite](https://img.shields.io/badge/Vite-7.3-646CFF.svg?logo=vite)](https://vitejs.dev/)
-[![Vitest](https://img.shields.io/badge/Vitest-55%20Passed-brightgreen.svg?logo=vitest)](https://vitest.dev/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![GitHub Pages](https://img.shields.io/badge/Showcase-Live%203D-cyan.svg)](https://Ashish-004-mar.github.io/astra-astronaut-health-monitor/)
 
 ---
 
-### [🌐 Launch Live 3D GitHub Pages Showcase](https://Ashish-004-mar.github.io/astra-astronaut-health-monitor/) · [🛰️ Repository Source](https://github.com/Ashish-004-mar/astra-astronaut-health-monitor) · [🌌 Watch Galaxy Video](docs/assets/astra-galaxy.mp4)
+### 🚀 **[LAUNCH LIVE ASTRA APPLICATION (EMBARKO CLOUD)](https://astra-health-monitor.embarko.app)**
+
+<a href="https://astra-health-monitor.embarko.app" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/badge/🚀%20OPEN%20LIVE%20APP-ASTRA%20ON%20EMBARKO-00F0FF?style=for-the-badge&logo=rocket&logoColor=black&labelColor=0b1329" height="52" alt="Launch Live ASTRA Application" />
+</a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="https://Ashish-004-mar.github.io/astra-astronaut-health-monitor/" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/badge/🌐%203D%20SHOWCASE-GITHUB%20PAGES-7928CA?style=for-the-badge&logo=three.js&logoColor=white&labelColor=0b1329" height="52" alt="Launch 3D GitHub Pages Showcase" />
+</a>
+
+<br /><br />
+
+**[🌐 Launch 3D Showcase](https://Ashish-004-mar.github.io/astra-astronaut-health-monitor/) · [🛰️ Repository Source](https://github.com/Ashish-004-mar/astra-astronaut-health-monitor) · [🌌 Watch Galaxy Video](docs/assets/astra-galaxy.mp4) · [🚀 Live Cloud URL](https://astra-health-monitor.embarko.app)**
 
 ---
 
@@ -66,6 +82,29 @@ ASTRA features continuous, frame-rate-independent animated biometric telemetry c
 - **Scanning Radar Sweep**: A dynamic glowing cyan tracer sweeps across the 24-hour telemetry window to signify active clinical observation.
 - **Personal Baseline Envelopes**: Dashed reference lines (e.g., 68 BPM baseline) visualize physiological variances in real time.
 - **Multi-Range Examination**: Configurable time intervals across 6H, 24H, 7D, 30D, and full mission duration.
+
+---
+
+## 📷 Kinematic Camera Tracking & Regional Body Analysis Studio
+
+ASTRA features a dedicated on-device computer vision and kinematic tracking flight deck studio powered by Google MediaPipe Edge ML tasks and WebAssembly. It executes 100% within the local browser sandbox with zero video data upload or cloud egress.
+
+<div align="center">
+  <img src="docs/assets/camera-tracking-preview.png" alt="ASTRA Kinematic Camera Tracking & Regional Body Analysis Flight Deck Studio" width="100%" />
+</div>
+
+<br />
+
+### Studio Capabilities & Bioastronautics Architecture:
+- **33-Point Skeletal Landmark Capture**: Computes real-time joint angles, elbow flexion, and postural alignment at native camera frame rates.
+- **Autonomous Anatomical Region Recognition**: Identifies, labels, and tracks discrete body segments with live interactive status chips:
+  - `HEAD / CRANIAL`: Gaze orientation, facial landmarks, and attentional focus tracking.
+  - `CHEST / TORSO`: Thoracic respiratory movement, center of mass, and cardiopulmonary proximity.
+  - `LEFT & RIGHT ARM`: Brachial articulation, elbow flexion angles, and microgravity resistive countermeasure exercises.
+  - `LEGS / LOWER BODY`: Lower extremity positioning and treadmill/cycle ergometer mechanics.
+- **Biometric Telemetry Station**: Correlates posture alignment with cardiovascular telemetry (72 BPM vs. personal baseline 68 BPM) and arterial oxygen saturation ($98\%$ nominal arterial perfusion).
+- **Microgravity Kinematic Guidelines**: Displays real-time procedural guidance for Neutral Body Posture (NBP) and webcam positioning to prevent joint hyperextension.
+- **Privacy by Design**: Video frames never leave the client's volatile memory. Video is never uploaded, recorded, or transmitted.
 
 ---
 
@@ -134,7 +173,9 @@ $$\text{DATA} \longrightarrow \text{MONITOR} \longrightarrow \text{COMPARE} \lon
 | **Mission Nutrition** | Deep space dietary resilience & shelf-life vitamin degradation tracking | `NASA HRP GUIDELINES` | Countermeasures against microgravity muscle atrophy and micronutrient depletion. |
 | **2-Min Wellness Check** | Rapid subjective evaluation of crew cognitive readiness, mood, and fatigue | `SELF-REPORTED DB` | Fast, low-burden daily checks stored in local indexed browser database with standalone PDF. |
 | **ASTRA Voice Assistant** | 100% offline bilingual companion with 160 curated aerospace medical Q&As | `100% OFFLINE` | Hands-free mission health guidance without remote network latency or privacy leakage. |
-| **Camera Vision Tracking** | On-device face/body landmark detection for eye aspect ratio & blink rate | `LOCAL WASM/CPU` | Client-side drowsiness and saccade analysis with zero video storage or transmission. |
+| **Kinematic Camera Tracking** | On-device 33-point skeletal landmark detection & regional body analysis (Head, Chest, Arms, Legs) | `LOCAL WASM/CPU` | Real-time microgravity posture scoring, joint angles, and regional biometrics with zero video upload. |
+| **ASTRA MindSpace** | Crew mental resilience, stress recovery studio, audio chimes, and autonomous team harmony | `NASA HRP BEHAVIORAL` | Confidential offline stress recovery and crew cohesion tools during long-duration confinement. |
+| **MissionCare Emergency Assist** | Autonomous medical emergency decision support for chest pain & sudden collapse | `NASA HRP MEDICAL RISK` | Non-medical crew triage protocols, resuscitation checklists, and offline emergency response tools. |
 | **Daily Health PDF Reports** | 3-page clinical flight surgeon summaries with sparkline trends | `CLIENT-SIDE JSPDF` | In-memory printable documentation ready for Earth sync when comms windows open. |
 
 ---

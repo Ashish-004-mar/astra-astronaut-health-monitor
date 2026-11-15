@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Volume2, VolumeX, Play, Pause, Compass, Github, ShieldAlert } from "lucide-react";
+import { Volume2, VolumeX, Play, Pause, Compass, Github, ShieldAlert, Rocket } from "lucide-react";
 
 interface Props {
   onExploreClick: () => void;
@@ -91,9 +91,25 @@ export default function HeroVideoSection({ onExploreClick }: Props) {
         </p>
 
         <div className="hero-actions">
-          <button className="btn-primary" onClick={onExploreClick}>
+          <a
+            href="https://astra-health-monitor.embarko.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary"
+            style={{
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+            }}
+          >
+            <Rocket size={18} />
+            <span>LAUNCH LIVE APP (EMBARKO)</span>
+          </a>
+
+          <button className="btn-secondary" onClick={onExploreClick}>
             <Compass size={18} />
-            <span>EXPLORE PROJECT</span>
+            <span>EXPLORE 3D SHOWCASE</span>
           </button>
 
           <a

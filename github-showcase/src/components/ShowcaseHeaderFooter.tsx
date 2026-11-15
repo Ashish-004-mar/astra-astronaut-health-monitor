@@ -1,5 +1,5 @@
 import React from "react";
-import { Github, Globe, ExternalLink } from "lucide-react";
+import { Github, Globe, ExternalLink, Rocket } from "lucide-react";
 
 export function ShowcaseNavbar() {
   return (
@@ -21,15 +21,32 @@ export function ShowcaseNavbar() {
         <a href="#science">SCIENCE</a>
       </nav>
 
-      <a
-        href="https://github.com/Ashish-004-mar/astra-astronaut-health-monitor"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="nav-cta-btn"
-      >
-        <Github size={14} />
-        <span>GITHUB REPO</span>
-      </a>
+      <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+        <a
+          href="https://astra-health-monitor.embarko.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="nav-cta-btn"
+          style={{
+            background: "linear-gradient(135deg, #00f0ff 0%, #0070f3 100%)",
+            color: "#050b18",
+            fontWeight: 700,
+          }}
+        >
+          <Rocket size={14} />
+          <span>LAUNCH LIVE APP</span>
+        </a>
+
+        <a
+          href="https://github.com/Ashish-004-mar/astra-astronaut-health-monitor"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="nav-cta-btn"
+        >
+          <Github size={14} />
+          <span>GITHUB REPO</span>
+        </a>
+      </div>
     </header>
   );
 }
