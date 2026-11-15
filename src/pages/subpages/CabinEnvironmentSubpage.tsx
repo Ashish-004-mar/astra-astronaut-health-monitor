@@ -25,6 +25,7 @@ import {
   setCabinScenario,
   getCabinReadings,
 } from "../../services/hazardService";
+import { audioAlertService } from "../../services/audioAlertService";
 import type { CabinScenario } from "../../types/hazards";
 
 interface CabinEnvironmentSubpageProps {
@@ -41,9 +42,27 @@ export default function CabinEnvironmentSubpage({ onBack }: CabinEnvironmentSubp
     setReadings(getCabinReadings(scenario));
   }, [scenario]);
 
+  useEffect(() => {
+    return () => {
+      audioAlertService.clearAlertsBySource("CabinEnvironment");
+    };
+  }, []);
+
   const handleScenarioChange = (s: CabinScenario) => {
     setCabinScenario(s);
     setScenarioState(s);
+    if (s === "ELEVATED_CO2") {
+      audioAlertService.triggerAlert({
+        id: "cabin-elevated-co2",
+        source: "CabinEnvironment",
+        title: "ECLSS ATMOSPHERIC HAZARD: ELEVATED CO2 (4200 PPM)",
+        reason: "Carbon dioxide exceeds NASA 3.0 mmHg limit. Air scrubbers boosted.",
+        severity: "CRITICAL",
+        timestamp: new Date().toISOString(),
+      });
+    } else {
+      audioAlertService.clearAlertsBySource("CabinEnvironment");
+    }
   };
 
   const currentReading = readings[readings.length - 1];

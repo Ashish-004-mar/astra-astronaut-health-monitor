@@ -11,6 +11,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { demo, fetchWeather, type Weather, type SpaceEvent } from "../../services/spaceWeather";
+import { audioAlertService } from "../../services/audioAlertService";
 
 interface RadiationSubpageProps {
   onBack: () => void;
@@ -21,6 +22,30 @@ export default function RadiationSubpage({ onBack }: RadiationSubpageProps) {
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(0);
   const [activeTab, setActiveTab] = useState<"solar" | "dosimeter">("solar");
+  const [isSpeSimulated, setIsSpeSimulated] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      audioAlertService.clearAlertsBySource("Radiation");
+    };
+  }, []);
+
+  const toggleSpeSimulation = () => {
+    if (!isSpeSimulated) {
+      setIsSpeSimulated(true);
+      audioAlertService.triggerAlert({
+        id: "radiation-spe-hazard",
+        source: "Radiation",
+        title: "SPACE RADIATION HAZARD: SOLAR PARTICLE EVENT",
+        reason: "DONKI satellite proton flux surge. Retreat to core habitat storm shelter.",
+        severity: "CRITICAL",
+        timestamp: new Date().toISOString(),
+      });
+    } else {
+      setIsSpeSimulated(false);
+      audioAlertService.clearAlertsBySource("Radiation");
+    }
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -129,6 +154,13 @@ export default function RadiationSubpage({ onBack }: RadiationSubpageProps) {
           onClick={() => setActiveTab("dosimeter")}
         >
           VIEW RADIATION CONTEXT
+        </button>
+        <button
+          className={`button ${isSpeSimulated ? "primary" : "outline"}`}
+          onClick={toggleSpeSimulation}
+          title={isSpeSimulated ? "Clear SPE Simulation" : "Simulate Solar Particle Event Hazard"}
+        >
+          <Radio size={14} /> {isSpeSimulated ? "CLEAR SPE ALERT" : "SIMULATE SOLAR PARTICLE EVENT"}
         </button>
       </div>
 
