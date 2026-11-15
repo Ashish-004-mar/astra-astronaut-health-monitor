@@ -59,19 +59,21 @@ export default function CinematicLanding({ onEnter, reducedMotion }: Props) {
   }, [reducedMotion]);
 
   useEffect(() => {
-    // When landing page opens, attempt to play the greeting
+    // When landing page opens, queue or play the greeting in compliance with browser autoplay policy
     introAudioService.playGreeting();
 
-    // Fallback for browser autoplay policies: play loud on very first click/tap anywhere
+    // Unlocks Web Audio API cleanly on user's very first click/tap/keypress
     const handleFirstGesture = () => {
-      introAudioService.playGreeting();
+      introAudioService.markUserInteracted();
     };
-    window.addEventListener("pointerdown", handleFirstGesture, { once: true });
+    window.addEventListener("pointerdown", handleFirstGesture, { once: true, passive: true });
     window.addEventListener("keydown", handleFirstGesture, { once: true });
+    window.addEventListener("click", handleFirstGesture, { once: true });
 
     return () => {
       window.removeEventListener("pointerdown", handleFirstGesture);
       window.removeEventListener("keydown", handleFirstGesture);
+      window.removeEventListener("click", handleFirstGesture);
     };
   }, []);
 
@@ -138,12 +140,14 @@ export default function CinematicLanding({ onEnter, reducedMotion }: Props) {
     }
   }
   function enter() {
+    introAudioService.markUserInteracted();
     introAudioService.playGreeting(true);
     if (entering.current || stage !== "WELCOME_VISIBLE") return;
     entering.current = true;
     setStage("ENTERING_MISSION");
   }
   function skip() {
+    introAudioService.markUserInteracted();
     introAudioService.playGreeting(true);
     if (committed.current) return;
     entering.current = true;

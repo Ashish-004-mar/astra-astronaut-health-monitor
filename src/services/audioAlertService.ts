@@ -37,18 +37,40 @@ class AudioAlertManager {
   private isSpeakingAlert: boolean = false;
   private lastSpokenAlertId: string | null = null;
 
-  private initAudio() {
+  private canPlayAudio(): boolean {
+    if (typeof window === "undefined") return false;
+    if (
+      "userActivation" in navigator &&
+      (navigator as unknown as { userActivation?: { hasBeenActive: boolean } }).userActivation
+    ) {
+      return Boolean(
+        (navigator as unknown as { userActivation: { hasBeenActive: boolean } }).userActivation
+          .hasBeenActive
+      );
+    }
+    return true;
+  }
+
+  private initAudio(): boolean {
+    if (!this.canPlayAudio()) {
+      return false;
+    }
     if (!this.audioCtx && typeof window !== "undefined") {
       const AudioContextClass =
         window.AudioContext ||
         (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       if (AudioContextClass) {
-        this.audioCtx = new AudioContextClass();
+        try {
+          this.audioCtx = new AudioContextClass();
+        } catch {
+          return false;
+        }
       }
     }
     if (this.audioCtx && this.audioCtx.state === "suspended") {
       this.audioCtx.resume().catch(() => {});
     }
+    return Boolean(this.audioCtx);
   }
 
   private notify() {
@@ -142,7 +164,7 @@ class AudioAlertManager {
    */
   private startSirenSound(severity: AlertSeverity = "CRITICAL") {
     if (this.isSounding) return;
-    this.initAudio();
+    if (!this.initAudio()) return;
     if (!this.audioCtx) return;
 
     try {

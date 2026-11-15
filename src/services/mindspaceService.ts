@@ -829,6 +829,14 @@ export function generateWellnessSuggestions(
 
 export function playSoothingChime(frequency = 528, durationSec = 1.2): void {
   if (typeof window === "undefined") return;
+  if (
+    "userActivation" in navigator &&
+    (navigator as unknown as { userActivation?: { hasBeenActive: boolean } }).userActivation &&
+    !(navigator as unknown as { userActivation: { hasBeenActive: boolean } }).userActivation
+      .hasBeenActive
+  ) {
+    return;
+  }
   try {
     const AudioContextClass =
       window.AudioContext ||
