@@ -42,7 +42,13 @@
 
 ---
 
-<img src="docs/assets/earth-rotating.gif" alt="Rotating 3D Earth Globe" width="220" />
+<div align="center">
+  <img src="docs/assets/earth-rotating.gif" alt="Rotating 3D Earth Globe" width="200" />
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="docs/assets/nasa-pixel-3d-rings.gif" alt="3D Pixel NASA Insignia with Auto-Rotating Orbital Rings" width="200" />
+  <br />
+  <small><b>ORBITAL EARTH (400 KM) &nbsp;&bull;&nbsp; NASA 3D PIXEL INSIGNIA (AUTO-ROTATING RINGS)</b></small>
+</div>
 
 <br />
 
@@ -184,6 +190,39 @@ $$\text{DATA} \longrightarrow \text{MONITOR} \longrightarrow \text{COMPARE} \lon
 
 ASTRA's design, operational envelopes, and health metrics are grounded in peer-reviewed scientific literature and public technical reports published by NASA.
 
+<div align="center">
+
+<img src="docs/assets/nasa-pixel-3d-rings.gif" alt="3D Pixel NASA Insignia with Continuous Auto-Rotating Orbital Rings" width="280" />
+
+<br />
+
+### 🌌 3D PIXEL NASA INSIGNIA // AUTONOMOUS MULTI-AXIS ORBITAL RINGS 🌌
+*Continuous 360° Looping Microgravity Simulation &bull; Retro-Cyber Bioastronautics Aesthetic*
+
+<br />
+
+</div>
+
+### 📸 Official NASA Research Evidence & Documentation Gallery
+
+Direct evidence documentation, clinical risk disposition matrices, and spaceflight life support references cited in ASTRA:
+
+| 1. NASA Human Research Roadmap (HRR) Evidence | 2. Behavioral Health & Psychiatric Risks (HRP) |
+| :---: | :---: |
+| [![NASA HRR Evidence Library](docs/assets/nasa-evidence-library.png)](https://humanresearchroadmap.nasa.gov/Evidence/) | [![NASA HRR Behavioral Health Risks Matrix](docs/assets/nasa-hrr-behavioral-risks.jpg)](https://humanresearchroadmap.nasa.gov/Risks/risk.aspx?i=180) |
+| 🔗 **[Explore Official NASA HRR Evidence Library](https://humanresearchroadmap.nasa.gov/Evidence/)**<br />*Central NASA database of evidence reports: Exploration Medical Capability, Renal Stone Risk, and Spaceflight Pharmacology.* | 🔗 **[Explore NASA Behavioral Health Risk Matrix](https://humanresearchroadmap.nasa.gov/Risks/risk.aspx?i=180)**<br />*HRP risk ratings and dispositions across Design Reference Missions (LEO, Lunar Orbit, Lunar Surface, Mars 730–1224 days).* |
+
+| 3. Risk of Inadequate Food & Nutrition | 4. ISS 98% Water Recovery Milestone (ECLSS) |
+| :---: | :---: |
+| [![NASA Deep Space Nutrition Risk](docs/assets/nasa-nutrition-deepspace.jpg)](https://www.nasa.gov/reference/risk-of-inadequate-food-and-nutrition/) | [![NASA ISS Water Recovery Milestone](docs/assets/nasa-iss-water-recovery.jpg)](https://www.nasa.gov/missions/station/iss-research/nasa-achieves-water-recovery-milestone-on-international-space-station/) |
+| 🔗 **[Read NASA Spaceflight Nutrition Reference](https://www.nasa.gov/reference/risk-of-inadequate-food-and-nutrition/)**<br />*Astronaut Kjell Lindgren on ISS; vitamin degradation (C, B₁, Potassium) over long-duration planetary missions.* | 🔗 **[Read NASA 98% ISS Water Recovery Milestone](https://www.nasa.gov/missions/station/iss-research/nasa-achieves-water-recovery-milestone-on-international-space-station/)**<br />*Astronaut Woody Hoburg with ISS ECLSS sample; breakthrough vacuum rotary distillation and brine processing.* |
+
+<br />
+
+---
+
+### Detailed Scientific Reference Registry
+
 ### A. NASA Human Research Program — Five Spaceflight Hazards
 - **Official NASA Reference**: [https://www.nasa.gov/hrp/hazards/](https://www.nasa.gov/hrp/hazards/)
 - **Scientific Foundation**: Categorizes the 5 primary hazards of long-duration human spaceflight:
@@ -194,10 +233,18 @@ ASTRA's design, operational envelopes, and health metrics are grounded in peer-r
   5. *Hostile/Closed Environments*: Closed-loop toxicological limits, cabin air CO₂, and microbial buildup.
 - **ASTRA Relevance**: Provides the framework for ASTRA's Space Hazards module, offline resilience architecture, and daily subjective wellness assessments.
 
-### B. NASA Human Spaceflight Health Risks
-- **Official NASA Reference**: [https://www.nasa.gov/hrp/risks/](https://www.nasa.gov/hrp/risks/)
-- **Scientific Foundation**: Detailed characterization of operational medical risks across cardiovascular, neurological, musculoskeletal, and behavioral health.
-- **ASTRA Relevance**: Informs ASTRA's clinical anomaly classification (e.g., correlating sleep deficit with resting heart rate elevation) and countermeasure recommendations.
+### B. NASA Human Spaceflight Health Risks & Behavioral Health Dispositions
+- **Official NASA Reference**: [https://www.nasa.gov/hrp/risks/](https://www.nasa.gov/hrp/risks/) & [https://humanresearchroadmap.nasa.gov/Risks/risk.aspx?i=180](https://humanresearchroadmap.nasa.gov/Risks/risk.aspx?i=180)
+- **Scientific Evidence Document**:
+  <div align="center">
+    <a href="https://humanresearchroadmap.nasa.gov/Risks/risk.aspx?i=180" target="_blank" rel="noopener noreferrer">
+      <img src="docs/assets/nasa-hrr-behavioral-risks.jpg" width="80%" alt="NASA HRR Risk Ratings and Dispositions for Behavioral Health" />
+    </a>
+    <br />
+    <small><i>Figure: NASA Human Research Roadmap (HRR) Risk Ratings and Dispositions per DRM Category (LEO, Lunar, Mars) &bull; <a href="https://humanresearchroadmap.nasa.gov/Risks/risk.aspx?i=180">Open Official HRR Risk 180</a></i></small>
+  </div>
+- **Scientific Foundation**: Detailed characterization of operational medical risks across cardiovascular, neurological, musculoskeletal, and behavioral health. Quantifies likelihood and consequence (LxC) matrix ratings (e.g., 5×3 for Mars transit requiring active mitigation).
+- **ASTRA Relevance**: Informs ASTRA's clinical anomaly classification (e.g., correlating sleep deficit with resting heart rate elevation), MindSpace stress recovery studio, and autonomous countermeasure recommendations.
 
 ### C. NASA Spaceflight Standard Measures
 - **Official NASA Reference**: [https://www.nasa.gov/reference/standard-measures/](https://www.nasa.gov/reference/standard-measures/)
@@ -226,6 +273,14 @@ ASTRA's design, operational envelopes, and health metrics are grounded in peer-r
 
 ### H. NASA Spaceflight Nutrition Research
 - **Official NASA Reference**: [https://www.nasa.gov/reference/risk-of-inadequate-food-and-nutrition/](https://www.nasa.gov/reference/risk-of-inadequate-food-and-nutrition/)
+- **Scientific Evidence Document**:
+  <div align="center">
+    <a href="https://www.nasa.gov/reference/risk-of-inadequate-food-and-nutrition/" target="_blank" rel="noopener noreferrer">
+      <img src="docs/assets/nasa-nutrition-deepspace.jpg" width="80%" alt="NASA Risk of Inadequate Food and Nutrition - Astronaut Kjell Lindgren on ISS" />
+    </a>
+    <br />
+    <small><i>Figure: NASA Astronaut Kjell Lindgren on ISS examining fresh citrus cargo; deep-space food systems require nutrient stability without resupply &bull; <a href="https://www.nasa.gov/reference/risk-of-inadequate-food-and-nutrition/">Open Official NASA Article</a></i></small>
+  </div>
 - **Scientific Foundation**: Evaluates nutrient degradation (Thiamine, Vitamin C, Potassium) over long-duration shelf storage and the metabolic impact of microgravity caloric deficits.
 - **ASTRA Relevance**: Forms the scientific basis for ASTRA's Nutrition module (`src/services/nutritionService.ts`), tracking micronutrient stability, caloric expenditure, and countermeasure meal suggestions.
 
@@ -235,12 +290,28 @@ ASTRA's design, operational envelopes, and health metrics are grounded in peer-r
 - **ASTRA Relevance**: Architectural benchmark for ASTRA's Cabin Environment monitoring and toxicological thresholds.
 
 ### J. NASA ISS Water Recovery Milestone (2023)
-- **Official NASA Reference**: [https://www.nasa.gov/missions/station/nasa-achieves-water-recovery-milestone-on-international-space-station/](https://www.nasa.gov/missions/station/nasa-achieves-water-recovery-milestone-on-international-space-station/)
+- **Official NASA Reference**: [https://www.nasa.gov/missions/station/iss-research/nasa-achieves-water-recovery-milestone-on-international-space-station/](https://www.nasa.gov/missions/station/iss-research/nasa-achieves-water-recovery-milestone-on-international-space-station/)
+- **Scientific Evidence Document**:
+  <div align="center">
+    <a href="https://www.nasa.gov/missions/station/iss-research/nasa-achieves-water-recovery-milestone-on-international-space-station/" target="_blank" rel="noopener noreferrer">
+      <img src="docs/assets/nasa-iss-water-recovery.jpg" width="80%" alt="NASA Achieves Water Recovery Milestone on International Space Station" />
+    </a>
+    <br />
+    <small><i>Figure: Astronaut Woody Hoburg inspecting closed-loop ECLSS Water Processor Assembly (WPA) on ISS &bull; <a href="https://www.nasa.gov/missions/station/iss-research/nasa-achieves-water-recovery-milestone-on-international-space-station/">Open Official NASA Press Release</a></i></small>
+  </div>
 - **Scientific Foundation**: In June 2023, NASA ECLSS achieved a breakthrough milestone of 98% water recovery in low-Earth orbit using vacuum rotary distillation and brine processing assembly.
 - **ASTRA Relevance**: Foundation for ASTRA's AquaGuard module (`src/services/aquaguardService.ts`), which monitors simulated Total Organic Carbon (TOC < 500 ppb), conductivity, and microbial testing in closed-loop ECLSS pipelines. *(Note: ASTRA models and monitors water telemetry; it does not physically process fluids).*
 
 ### K. NASA Human Research Roadmap (HRR) — Evidence
 - **Official NASA Reference**: [https://humanresearchroadmap.nasa.gov/Evidence/](https://humanresearchroadmap.nasa.gov/Evidence/)
+- **Scientific Evidence Document**:
+  <div align="center">
+    <a href="https://humanresearchroadmap.nasa.gov/Evidence/" target="_blank" rel="noopener noreferrer">
+      <img src="docs/assets/nasa-evidence-library.png" width="80%" alt="NASA Human Research Program Evidence Reports" />
+    </a>
+    <br />
+    <small><i>Figure: NASA Human Research Program Evidence Library and Risk Documentation &bull; <a href="https://humanresearchroadmap.nasa.gov/Evidence/">Open Official NASA HRR Evidence Portal</a></i></small>
+  </div>
 - **Scientific Foundation**: Evidence reports and clinical risk reductions defining spaceflight operational medicine standards.
 - **ASTRA Relevance**: Validates the clinical rationale rules and countermeasure logic displayed in ASTRA's daily health summaries.
 

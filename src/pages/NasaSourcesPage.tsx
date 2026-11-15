@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   Database,
   ExternalLink,
+  FileText,
   Filter,
   Globe2,
   Info,
@@ -142,16 +143,30 @@ export default function NasaSourcesPage({ onBack, onEnterApp }: Props) {
             </div>
           </div>
 
-          <div className="nasa-hero-globe">
-            <img
-              src="./docs/assets/earth-rotating.gif"
-              alt="Rotating Earth Visual"
-              onError={(e) => {
-                // Fallback if gif path differs in nested environment
-                (e.target as HTMLElement).style.display = "none";
-              }}
-            />
-            <span className="globe-caption">ORBITAL VIEW // 400 KM</span>
+          <div className="nasa-hero-visuals">
+            <div className="nasa-hero-orb">
+              <img
+                src="./assets/nasa-pixel-3d-rings.gif"
+                alt="NASA 3D Pixel Insignia with Auto-Rotating Rings"
+                className="nasa-pixel-orb-img"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = "./docs/assets/nasa-pixel-3d-rings.gif";
+                }}
+              />
+              <span className="globe-caption">3D PIXEL NASA // ROTATING RINGS</span>
+            </div>
+
+            <div className="nasa-hero-globe">
+              <img
+                src="./docs/assets/earth-rotating.gif"
+                alt="Rotating Earth Visual"
+                onError={(e) => {
+                  // Fallback if gif path differs in nested environment
+                  (e.target as HTMLElement).style.display = "none";
+                }}
+              />
+              <span className="globe-caption">ORBITAL VIEW // 400 KM</span>
+            </div>
           </div>
         </section>
 
@@ -386,7 +401,136 @@ export default function NasaSourcesPage({ onBack, onEnterApp }: Props) {
           </section>
         )}
 
-        {/* 7. Detailed Source Modal */}
+        {/* 7. OFFICIAL NASA SCIENTIFIC DOCUMENTATION & EVIDENCE GALLERY */}
+        <section className="nasa-gallery-section" aria-label="Official NASA Research Evidence Gallery">
+          <div className="section-title-wrap">
+            <div className="section-icon-badge">
+              <FileText size={16} />
+            </div>
+            <div>
+              <h2>OFFICIAL NASA RESEARCH EVIDENCE & DOCUMENTATION GALLERY</h2>
+              <p className="section-subtitle">
+                Inspect primary NASA publications, risk disposition matrices, and life support milestones cited throughout ASTRA.
+              </p>
+            </div>
+          </div>
+
+          <div className="nasa-evidence-grid">
+            <div className="nasa-evidence-card">
+              <div className="nasa-evidence-thumb-wrap">
+                <img
+                  src="./assets/nasa-evidence-library.png"
+                  alt="NASA Human Research Program Evidence Library"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "./docs/assets/nasa-evidence-library.png";
+                  }}
+                />
+              </div>
+              <div className="nasa-evidence-content">
+                <span className="nasa-evidence-tag">NASA HRP EVIDENCE</span>
+                <h4 className="nasa-evidence-title">NASA Human Research Roadmap Evidence Library</h4>
+                <p className="nasa-evidence-desc">
+                  Central repository of evidence reports informing Exploration Medical Capability, renal stone risk, and spaceflight pharmacology.
+                </p>
+                <a
+                  href="https://humanresearchroadmap.nasa.gov/Evidence/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="nasa-evidence-btn"
+                >
+                  <span>OPEN EVIDENCE REPO</span>
+                  <ExternalLink size={12} />
+                </a>
+              </div>
+            </div>
+
+            <div className="nasa-evidence-card">
+              <div className="nasa-evidence-thumb-wrap">
+                <img
+                  src="./assets/nasa-hrr-behavioral-risks.jpg"
+                  alt="NASA HRR Behavioral Health Risks Matrix"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "./docs/assets/nasa-hrr-behavioral-risks.jpg";
+                  }}
+                />
+              </div>
+              <div className="nasa-evidence-content">
+                <span className="nasa-evidence-tag">BEHAVIORAL HEALTH</span>
+                <h4 className="nasa-evidence-title">NASA HRR Behavioral Health Risks & DRM Dispositions</h4>
+                <p className="nasa-evidence-desc">
+                  HRP Likelihood &amp; Consequence (LxC) matrix defining operational behavioral health risks for LEO, Lunar, and multi-year Mars missions.
+                </p>
+                <a
+                  href="https://humanresearchroadmap.nasa.gov/Risks/risk.aspx?i=180"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="nasa-evidence-btn"
+                >
+                  <span>OPEN RISK 180 MATRIX</span>
+                  <ExternalLink size={12} />
+                </a>
+              </div>
+            </div>
+
+            <div className="nasa-evidence-card">
+              <div className="nasa-evidence-thumb-wrap">
+                <img
+                  src="./assets/nasa-nutrition-deepspace.jpg"
+                  alt="NASA Risk of Inadequate Food and Nutrition"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "./docs/assets/nasa-nutrition-deepspace.jpg";
+                  }}
+                />
+              </div>
+              <div className="nasa-evidence-content">
+                <span className="nasa-evidence-tag">DEEP SPACE NUTRITION</span>
+                <h4 className="nasa-evidence-title">NASA Risk of Inadequate Food and Nutrition</h4>
+                <p className="nasa-evidence-desc">
+                  Astronaut Kjell Lindgren on ISS; evaluating shelf-life micronutrient degradation (Vitamin C, Thiamine) during planetary exploration.
+                </p>
+                <a
+                  href="https://www.nasa.gov/reference/risk-of-inadequate-food-and-nutrition/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="nasa-evidence-btn"
+                >
+                  <span>OPEN NUTRITION REF</span>
+                  <ExternalLink size={12} />
+                </a>
+              </div>
+            </div>
+
+            <div className="nasa-evidence-card">
+              <div className="nasa-evidence-thumb-wrap">
+                <img
+                  src="./assets/nasa-iss-water-recovery.jpg"
+                  alt="NASA ISS Water Recovery Milestone"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "./docs/assets/nasa-iss-water-recovery.jpg";
+                  }}
+                />
+              </div>
+              <div className="nasa-evidence-content">
+                <span className="nasa-evidence-tag">ECLSS LIFE SUPPORT</span>
+                <h4 className="nasa-evidence-title">NASA Achieves 98% ISS Water Recovery Milestone</h4>
+                <p className="nasa-evidence-desc">
+                  Breakthrough vacuum rotary distillation and brine processing assembly achieving 98% closed-loop water recovery on ISS.
+                </p>
+                <a
+                  href="https://www.nasa.gov/missions/station/iss-research/nasa-achieves-water-recovery-milestone-on-international-space-station/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="nasa-evidence-btn"
+                >
+                  <span>OPEN MILESTONE REPORT</span>
+                  <ExternalLink size={12} />
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 8. Detailed Source Modal */}
         {selectedSource && (
           <div
             className="nasa-modal-overlay"
