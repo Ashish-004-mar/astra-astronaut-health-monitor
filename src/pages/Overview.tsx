@@ -230,7 +230,18 @@ export default function Overview() {
           >
             <div className="panel-heading">
               <span>BODY ANALYSIS</span>
-              <span className="tag">{region.toUpperCase()}</span>
+              <div className="body-analysis-region-tabs">
+                {(["Head", "Chest", "Muscles"] as Region[]).map((reg) => (
+                  <button
+                    key={reg}
+                    type="button"
+                    className={`analysis-reg-btn ${region === reg ? "active" : ""}`}
+                    onClick={() => select(reg)}
+                  >
+                    {reg.toUpperCase()}
+                  </button>
+                ))}
+              </div>
             </div>
             <h3>
               {region === "Chest"
@@ -259,12 +270,21 @@ export default function Overview() {
                   ? "Sleep and stress are considered together across repeated nights."
                   : "Activity is a simulated daily context score, independent of camera tracking."}
             </p>
-            <button
-              className="trend-link"
-              onClick={() => trend(regionMetrics[region][0])}
-            >
-              VIEW TREND <ArrowUpRight size={16} />
-            </button>
+            <div className="body-analysis-actions">
+              <button
+                className="trend-link"
+                onClick={() => trend(regionMetrics[region][0])}
+              >
+                VIEW TREND <ArrowUpRight size={16} />
+              </button>
+              <button
+                className="studio-shortcut-link"
+                onClick={() => setPage("Camera Tracking")}
+                title="Open full camera tracking studio"
+              >
+                FULL STUDIO <ChevronRight size={14} />
+              </button>
+            </div>
           </motion.section>
         </div>
       </div>
