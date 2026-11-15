@@ -288,14 +288,14 @@ export default function CinematicLanding({
               window.location.hash = "#/nasa-sources";
             }
           }}
-          title="Explore official NASA research, space biology, and public data APIs"
+          title="Examine official NASA research, space biology, and public data APIs used in ASTRA"
         >
           <div className="btn-title-row">
             <BookOpen size={13} className="nasa-icon" />
-            <span>EXPLORE NASA SOURCES</span>
+            <span>NASA DATA &amp; RESEARCH USED</span>
           </div>
           <span className="btn-microtext">
-            Scientific References • Public Data • Research Evidence
+            Official References • Public APIs • Integrated Evidence
           </span>
         </button>
       </motion.div>

@@ -746,7 +746,7 @@
   background: rgba(6, 18, 38, 0.65);
   border: 1px solid rgba(0, 240, 255, 0.4);
   border-radius: 12px;
-  padding: 10px 20px;
+  padding: 10px 22px;
   color: #d8f5fc;
   cursor: pointer;
   backdrop-filter: blur(12px);
@@ -759,7 +759,7 @@
   text-decoration: none;
   position: relative;
   overflow: hidden;
-  max-width: 320px;
+  max-width: 360px;
 }
 
 .intro-nasa-sources-btn:hover:not(:disabled) {
@@ -783,6 +783,7 @@
   letter-spacing: 2px;
   font-weight: 700;
   color: #00f0ff;
+  white-space: nowrap;
 }
 
 .intro-nasa-sources-btn:hover .btn-title-row {

@@ -259,10 +259,10 @@ export default function App() {
                   width: "100%",
                   justifyContent: "center",
                 }}
-                title="View NASA research and data sources"
+                title="View official NASA research and data sources used in ASTRA"
               >
                 <BookOpen size={12} />
-                <span>NASA SOURCES</span>
+                <span>NASA DATA USED</span>
               </button>
             </div>
           </aside>
