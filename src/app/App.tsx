@@ -5,6 +5,7 @@ import {
   UtensilsCrossed,
   Orbit,
   ClipboardCheck,
+  Brain,
   Settings as SettingsIcon,
   ArrowUpRight,
   Radio,
@@ -15,6 +16,7 @@ import { useStore } from "../state/store";
 import Overview from "../pages/Overview";
 import { MyHealth, Checkin, Space, Settings } from "../pages/Pages";
 import Nutrition from "../pages/Nutrition";
+import MindSpace from "../pages/MindSpace";
 import CinematicLanding from "../components/landing/CinematicLanding";
 import AstraVoicePanel from "../voice/AstraVoicePanel";
 import { audioAlertService, type ActiveAlert } from "../services/audioAlertService";
@@ -27,6 +29,7 @@ const nav = [
   { name: "Nutrition", icon: UtensilsCrossed },
   { name: "Space", icon: Orbit },
   { name: "Check-in", icon: ClipboardCheck },
+  { name: "MindSpace", icon: Brain },
   { name: "Settings", icon: SettingsIcon },
 ];
 export default function App() {
@@ -65,6 +68,10 @@ export default function App() {
         if (parts[1]) setSubpage(parts[1]);
       } else if (hash.startsWith("check-in") || hash.startsWith("checkin")) {
         setPage("Check-in");
+        const parts = hash.split("/");
+        if (parts[1]) setSubpage(parts[1]);
+      } else if (hash.startsWith("mindspace") || hash.startsWith("mind")) {
+        setPage("MindSpace");
         const parts = hash.split("/");
         if (parts[1]) setSubpage(parts[1]);
       } else if (hash.startsWith("settings")) {
@@ -212,7 +219,9 @@ export default function App() {
                     ? "YOUR WELLBEING, IN ORBIT."
                     : page === "Nutrition"
                       ? "ASTRA / CREW WELLNESS"
-                      : "ASTRA / MISSION SUPPORT"}
+                      : page === "MindSpace"
+                        ? "ASTRA / CREW RESILIENCE"
+                        : "ASTRA / MISSION SUPPORT"}
                 </div>
                 <h1>
                   {page === "Overview"
@@ -225,7 +234,9 @@ export default function App() {
                           ? "Beyond the cabin."
                           : page === "Check-in"
                             ? "Your daily check-in."
-                            : "Your mission, your settings."}
+                            : page === "MindSpace"
+                              ? "Mental wellness & recovery."
+                              : "Your mission, your settings."}
                 </h1>
                 <p>
                   {page === "Overview"
@@ -238,7 +249,9 @@ export default function App() {
                           ? "A window into the environment around you."
                           : page === "Check-in"
                             ? "Take a minute. Listen to yourself."
-                            : "A transparent, personal experience."}
+                            : page === "MindSpace"
+                              ? "Autonomous stress recovery, team harmony, and cognitive resilience in deep space."
+                              : "A transparent, personal experience."}
                 </p>
               </div>
               <span className="mission-badge">
@@ -257,6 +270,8 @@ export default function App() {
               <Space />
             ) : page === "Check-in" ? (
               <Checkin />
+            ) : page === "MindSpace" ? (
+              <MindSpace subpage={subpage} setSubpage={setSubpage} />
             ) : (
               <Settings />
             )}

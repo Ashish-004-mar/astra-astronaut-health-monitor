@@ -11,6 +11,7 @@ import {
   getReactionTestRecords,
 } from "./hazardService";
 import { getAquaGuardState, getTodayHydrationTotal } from "./aquaguardService";
+import { getTodayCheckin, getRecoveryLogs } from "./mindspaceService";
 
 export interface ReportData {
   day: number;
@@ -38,6 +39,16 @@ export interface ReportData {
     hydrationLoggedMl: number;
     hydrationTargetMl: number;
     status: string;
+  };
+  mindspaceSummary?: {
+    mood?: string;
+    stress?: number;
+    energy?: string;
+    sleep?: string;
+    focus?: string;
+    crewConnection?: string;
+    recoveryCount: number;
+    provenance: string;
   };
 }
 
@@ -109,6 +120,20 @@ export function buildReportData(
       hydrationTargetMl: aquaState.targetHydrationMl ?? 2500,
       status: latestSample?.status ?? "NOMINAL",
     },
+    mindspaceSummary: (() => {
+      const mc = getTodayCheckin(day);
+      const rl = getRecoveryLogs();
+      return {
+        mood: mc?.mood,
+        stress: mc?.stress,
+        energy: mc?.energy,
+        sleep: mc?.sleep,
+        focus: mc?.focus,
+        crewConnection: mc?.crewConnection,
+        recoveryCount: rl.length,
+        provenance: mc?.provenance ?? "NO DATA",
+      };
+    })(),
   };
 }
 
@@ -657,45 +682,67 @@ export function generateHealthReportPDF(data: ReportData): jsPDF {
   doc.setDrawColor(borderGray[0], borderGray[1], borderGray[2]);
   doc.roundedRect(margin, curY, contentWidth, 34, 2, 2, "FD");
 
-  // Left column: Nutrition
+  // 3-Column Summary: Nutrition, Bioastronautics, and MindSpace Resilience
+  // Column 1: Nutrition
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(8);
+  doc.setFontSize(7.5);
   doc.setTextColor(cyan[0], cyan[1], cyan[2]);
-  doc.text("Galley Nutrition Status (NASA HRP Inadequate Food Risk)", margin + 4, curY + 6);
+  doc.text("Galley Nutrition (NASA HRP)", margin + 4, curY + 6);
 
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(7.2);
+  doc.setFontSize(6.6);
   doc.setTextColor(darkText[0], darkText[1], darkText[2]);
   const nutr = data.nutritionSummary;
   doc.text(
-    `Calories: ${nutr ? nutr.calories : 1650} kcal (Target: ${nutr ? nutr.targets.dailyCalories : 2400} kcal)  |  Protein: ${nutr ? nutr.protein : 75}g (Target: ${nutr ? nutr.targets.dailyProtein : 90}g)`,
+    `Calories: ${nutr ? nutr.calories : 1650} kcal · Prot: ${nutr ? nutr.protein : 75}g`,
     margin + 4,
     curY + 12,
   );
   doc.text(
-    `Carbs: ${nutr ? nutr.carbs : 210}g  |  Fat: ${nutr ? nutr.fat : 55}g  |  Hydration: ${nutr ? nutr.waterMl : 2250}mL  |  Meals Logged: ${nutr ? nutr.mealsCount : 3}`,
+    `Carbs: ${nutr ? nutr.carbs : 210}g · Fat: ${nutr ? nutr.fat : 55}g`,
     margin + 4,
     curY + 18,
   );
+  doc.text(
+    `Hydration: ${nutr ? nutr.waterMl : 2250} mL · Meals: ${nutr ? nutr.mealsCount : 3}`,
+    margin + 4,
+    curY + 24,
+  );
   doc.setTextColor(mutedText[0], mutedText[1], mutedText[2]);
-  doc.text(`Status: ${nutr ? nutr.statusMessage : "All scheduled meals recorded."}`, margin + 4, curY + 24);
-  doc.text("Provenance: SIMULATED MISSION GALLEY TELEMETRY & CREW LOGS", margin + 4, curY + 30);
+  doc.text("Provenance: SIMULATED GALLEY LOGS", margin + 4, curY + 30);
 
-  // Right column: Hazards & Countermeasures
-  const colRightX = margin + contentWidth / 2 + 5;
+  // Column 2: Hazards & ECLSS
+  const col2X = margin + 59;
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(8);
+  doc.setFontSize(7.5);
   doc.setTextColor(deepBlue[0], deepBlue[1], deepBlue[2]);
-  doc.text("Bioastronautics Countermeasures (NASA Five Hazards)", colRightX, curY + 6);
+  doc.text("Bioastronautics & ECLSS (Five Hazards)", col2X, curY + 6);
 
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(7.2);
+  doc.setFontSize(6.6);
   doc.setTextColor(darkText[0], darkText[1], darkText[2]);
-  doc.text(`Exercise Completed: ${data.exerciseMinutes ?? 80} min / 120 min NASA Reference`, colRightX, curY + 12);
-  doc.text(`Simulated Cabin CO2: ${data.cabinCo2 ?? 2580} ppm (Ref Limit: 3800 ppm)`, colRightX, curY + 18);
-  doc.text(`AquaGuard ECLSS Water: TOC ${data.waterQuality?.tocPpb ?? 240} ppb · WRS ${data.waterQuality?.recoveryEfficiency ?? 98.4}%`, colRightX, curY + 24);
+  doc.text(`Exercise: ${data.exerciseMinutes ?? 80}m / 120m NASA Ref`, col2X, curY + 12);
+  doc.text(`Cabin CO2: ${data.cabinCo2 ?? 2580} ppm (Ref Limit: 3800)`, col2X, curY + 18);
+  doc.text(`WRS Efficiency: ${data.waterQuality?.recoveryEfficiency ?? 98.4}% · TOC: ${data.waterQuality?.tocPpb ?? 240} ppb`, col2X, curY + 24);
   doc.setTextColor(mutedText[0], mutedText[1], mutedText[2]);
-  doc.text(`Hydration Logged: ${data.waterQuality?.hydrationLoggedMl ?? 1750} / ${data.waterQuality?.hydrationTargetMl ?? 2500} mL (${data.waterQuality?.microbialStatus ?? "NEGATIVE"})`, colRightX, curY + 30);
+  doc.text(`Water Microbial: ${data.waterQuality?.microbialStatus ?? "NEGATIVE"}`, col2X, curY + 30);
+
+  // Column 3: MindSpace Resilience
+  const col3X = margin + 118;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(7.5);
+  doc.setTextColor(emerald[0], emerald[1], emerald[2]);
+  doc.text("MindSpace Resilience (NASA HRP)", col3X, curY + 6);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(6.6);
+  doc.setTextColor(darkText[0], darkText[1], darkText[2]);
+  const ms = data.mindspaceSummary;
+  doc.text(`Stress: ${ms?.stress !== undefined ? ms.stress + "/10" : "Not logged"} · Mood: ${ms?.mood ? ms.mood.toUpperCase() : "Pending"}`, col3X, curY + 12);
+  doc.text(`Focus: ${ms?.focus ? ms.focus.toUpperCase() : "Pending"} · Energy: ${ms?.energy ? ms.energy.toUpperCase() : "Pending"}`, col3X, curY + 18);
+  doc.text(`Stress Recovery Sessions: ${ms?.recoveryCount ?? 0} completed`, col3X, curY + 24);
+  doc.setTextColor(mutedText[0], mutedText[1], mutedText[2]);
+  doc.text(`Data: ${ms?.provenance ?? "NO DATA"} (Non-clinical)`, col3X, curY + 30);
 
   curY += 38;
 

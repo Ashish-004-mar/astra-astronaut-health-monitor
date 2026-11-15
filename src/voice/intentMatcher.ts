@@ -1,5 +1,6 @@
 import { knowledgeBase } from "./knowledgeBase";
 import { nutritionHazardsKB } from "./nutritionHazardsKB";
+import { mindspaceKB } from "./mindspaceKB";
 import type { KnowledgeEntry, VoiceCategory } from "./types";
 
 export interface MatchResult {
@@ -40,7 +41,7 @@ export function matchQuery(query: string, preferredCategory?: VoiceCategory): Ma
   const isHindi = detectDevanagari(query);
   const tokens = norm.split(" ").filter((t) => t.length > 1 && !STOP_WORDS.has(t));
 
-  const allEntries = [...nutritionHazardsKB, ...knowledgeBase];
+  const allEntries = [...mindspaceKB, ...nutritionHazardsKB, ...knowledgeBase];
 
   if (tokens.length === 0 && norm.length === 0) {
     return {
