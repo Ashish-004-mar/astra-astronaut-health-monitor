@@ -158,11 +158,10 @@ export default function NasaSourcesPage({ onBack, onEnterApp }: Props) {
 
             <div className="nasa-hero-globe">
               <img
-                src="./docs/assets/earth-rotating.gif"
+                src="./assets/earth-rotating.gif"
                 alt="Rotating Earth Visual"
                 onError={(e) => {
-                  // Fallback if gif path differs in nested environment
-                  (e.target as HTMLElement).style.display = "none";
+                  (e.target as HTMLImageElement).src = "./docs/assets/earth-rotating.gif";
                 }}
               />
               <span className="globe-caption">ORBITAL VIEW // 400 KM</span>
