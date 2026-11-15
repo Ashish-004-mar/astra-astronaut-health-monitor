@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Play, Pause, AudioLines } from "lucide-react";
+import { ArrowRight, Play, Pause, AudioLines, Volume2 } from "lucide-react";
 import { introConfig } from "./introConfig";
+import { introAudioService } from "../../services/introAudioService";
 import "../../styles/intro.css";
 
 export type IntroState =
@@ -56,6 +57,29 @@ export default function CinematicLanding({ onEnter, reducedMotion }: Props) {
       setPlaying(false);
     }
   }, [reducedMotion]);
+
+  useEffect(() => {
+    // When landing page opens, attempt to play the greeting
+    introAudioService.playGreeting();
+
+    // Fallback for browser autoplay policies: play loud on very first click/tap anywhere
+    const handleFirstGesture = () => {
+      introAudioService.playGreeting();
+    };
+    window.addEventListener("pointerdown", handleFirstGesture, { once: true });
+    window.addEventListener("keydown", handleFirstGesture, { once: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", handleFirstGesture);
+      window.removeEventListener("keydown", handleFirstGesture);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (stage === "WELCOME_VISIBLE") {
+      introAudioService.playGreeting();
+    }
+  }, [stage]);
 
   // Each state owns its timer. Unmount, skip and state changes cancel pending work.
   useEffect(() => {
@@ -114,11 +138,13 @@ export default function CinematicLanding({ onEnter, reducedMotion }: Props) {
     }
   }
   function enter() {
+    introAudioService.playGreeting(true);
     if (entering.current || stage !== "WELCOME_VISIBLE") return;
     entering.current = true;
     setStage("ENTERING_MISSION");
   }
   function skip() {
+    introAudioService.playGreeting(true);
     if (committed.current) return;
     entering.current = true;
     setStage("DASHBOARD_OPEN");
@@ -264,9 +290,14 @@ export default function CinematicLanding({ onEnter, reducedMotion }: Props) {
                   : "PLAY VIDEO"}
             </button>
           )}
-          <span className="intro-silent">
-            <AudioLines size={12} /> SOUND OFF
-          </span>
+          <button
+            type="button"
+            className="intro-silent intro-audio-btn"
+            onClick={() => introAudioService.playGreeting(true)}
+            title="Play ASTRA voice introduction"
+          >
+            <Volume2 size={12} /> ASTRA VOICE ONLINE
+          </button>
         </span>
       </div>
 
