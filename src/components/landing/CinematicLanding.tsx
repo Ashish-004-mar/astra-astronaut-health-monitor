@@ -1,6 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Play, Pause, AudioLines, Volume2, BookOpen } from "lucide-react";
+import {
+  ArrowRight,
+  Play,
+  Pause,
+  AudioLines,
+  Volume2,
+  BookOpen,
+  Github,
+  ExternalLink,
+} from "lucide-react";
 import { introConfig } from "./introConfig";
 import { introAudioService } from "../../services/introAudioService";
 import "../../styles/intro.css";
@@ -232,9 +241,22 @@ export default function CinematicLanding({
           <span aria-hidden="true">✳</span> ASTRA{" "}
           <span className="intro-wordmark-rule" />
         </span>
-        <button className="intro-skip" onClick={skip}>
-          SKIP INTRO <ArrowRight size={13} />
-        </button>
+        <div className="intro-top-actions">
+          <a
+            href="https://github.com/Ashish-004-mar/astra-astronaut-health-monitor"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="intro-top-github-btn"
+            title="Open official ASTRA repository on GitHub"
+          >
+            <Github size={13} />
+            <span>GITHUB REPO</span>
+            <ExternalLink size={11} />
+          </a>
+          <button className="intro-skip" onClick={skip}>
+            SKIP INTRO <ArrowRight size={13} />
+          </button>
+        </div>
       </div>
 
       <motion.div
@@ -298,6 +320,33 @@ export default function CinematicLanding({
             Official References • Public APIs • Integrated Evidence
           </span>
         </button>
+
+        <motion.a
+          href="https://github.com/Ashish-004-mar/astra-astronaut-health-monitor"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="intro-github-btn"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{
+            scale: welcome ? [0.8, 1.06, 1] : 0.8,
+            opacity: welcome ? 1 : 0,
+          }}
+          transition={{
+            duration: 0.45,
+            ease: "easeOut",
+            delay: 0.1,
+          }}
+          title="Open official ASTRA GitHub Repository — Source Code &amp; NASA Space Apps Project"
+        >
+          <div className="btn-title-row">
+            <Github size={14} className="github-icon" />
+            <span>GITHUB REPOSITORY</span>
+            <ExternalLink size={12} className="github-ext-icon" />
+          </div>
+          <span className="btn-microtext">
+            Public Source Code • Space Apps Challenge • Direct Access
+          </span>
+        </motion.a>
       </motion.div>
 
       <div className="intro-bottomline">

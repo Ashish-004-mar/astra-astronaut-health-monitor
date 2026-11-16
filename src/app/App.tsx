@@ -14,6 +14,8 @@ import {
   ChevronRight,
   VolumeX,
   BookOpen,
+  Github,
+  ExternalLink,
 } from "lucide-react";
 import { useStore } from "../state/store";
 import Overview from "../pages/Overview";
@@ -264,6 +266,33 @@ export default function App() {
                 <BookOpen size={12} />
                 <span>NASA DATA USED</span>
               </button>
+              <a
+                href="https://github.com/Ashish-004-mar/astra-astronaut-health-monitor"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="nasa-sidebar-link"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  fontSize: "10px",
+                  color: "#8cb4ff",
+                  background: "rgba(88, 166, 255, 0.08)",
+                  border: "1px solid rgba(88, 166, 255, 0.25)",
+                  borderRadius: "6px",
+                  padding: "5px 10px",
+                  cursor: "pointer",
+                  marginTop: "6px",
+                  width: "100%",
+                  justifyContent: "center",
+                  textDecoration: "none",
+                }}
+                title="Open official ASTRA GitHub repository"
+              >
+                <Github size={12} />
+                <span>GITHUB REPO</span>
+                <ExternalLink size={10} />
+              </a>
             </div>
           </aside>
           <main className="main" tabIndex={-1}>

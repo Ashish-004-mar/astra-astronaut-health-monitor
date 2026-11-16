@@ -742,7 +742,7 @@
 
 /* Secondary Button on Landing Page (Below Enter App) */
 .intro-nasa-sources-btn {
-  margin-top: 14px;
+  margin-top: 10px;
   background: rgba(6, 18, 38, 0.65);
   border: 1px solid rgba(0, 240, 255, 0.4);
   border-radius: 12px;
@@ -760,6 +760,7 @@
   position: relative;
   overflow: hidden;
   max-width: 360px;
+  width: 100%;
 }
 
 .intro-nasa-sources-btn:hover:not(:disabled) {
@@ -794,6 +795,82 @@
   font-size: 8px;
   letter-spacing: 1px;
   color: #9acbd6;
+  white-space: nowrap;
+}
+
+/* GitHub Repo Button on Landing Page */
+.intro-github-btn {
+  margin-top: 8px;
+  background: rgba(10, 16, 32, 0.72);
+  border: 1px solid rgba(88, 166, 255, 0.45);
+  border-radius: 12px;
+  padding: 10px 22px;
+  color: #e6edf3;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.4),
+    0 0 16px rgba(88, 166, 255, 0.22), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  max-width: 360px;
+  width: 100%;
+}
+
+.intro-github-btn:hover {
+  background: rgba(18, 28, 52, 0.92);
+  border-color: #58a6ff;
+  color: #ffffff;
+  box-shadow: 
+    0 6px 24px rgba(0, 0, 0, 0.5),
+    0 0 28px rgba(88, 166, 255, 0.5), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.intro-github-btn:focus-visible {
+  outline: 2px solid #58a6ff;
+  outline-offset: 4px;
+}
+
+.intro-github-btn .btn-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  color: #79c0ff;
+  white-space: nowrap;
+}
+
+.intro-github-btn:hover .btn-title-row {
+  color: #ffffff;
+}
+
+.intro-github-btn .github-ext-icon {
+  opacity: 0.75;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.intro-github-btn:hover .github-ext-icon {
+  opacity: 1;
+  transform: translate(2px, -2px);
+}
+
+.intro-github-btn .btn-microtext {
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: #a5b4fc;
   white-space: nowrap;
 }
 
