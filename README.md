@@ -13,8 +13,8 @@
 <br />
 
 [![Live App](https://img.shields.io/badge/Embarko-Live%20Deployed-00F0FF.svg?style=for-the-badge&logo=rocket&logoColor=black)](https://astra-health-monitor.embarko.app)
-[![GitHub Pages](https://img.shields.io/badge/Showcase-Live%203D-7928CA.svg?style=for-the-badge&logo=three.js&logoColor=white)](https://Ashish-004-mar.github.io/astra-astronaut-health-monitor/)
 [![Vitest](https://img.shields.io/badge/Vitest-77%20Passed-brightgreen.svg?style=for-the-badge&logo=vitest)](https://vitest.dev/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-181717.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Ashish-004-mar/astra-astronaut-health-monitor)
 
 <br />
 
@@ -32,13 +32,13 @@
   <img src="https://img.shields.io/badge/🚀%20OPEN%20LIVE%20APP-ASTRA%20ON%20EMBARKO-00F0FF?style=for-the-badge&logo=rocket&logoColor=black&labelColor=0b1329" height="52" alt="Launch Live ASTRA Application" />
 </a>
 &nbsp;&nbsp;&nbsp;&nbsp;
-<a href="https://Ashish-004-mar.github.io/astra-astronaut-health-monitor/" target="_blank" rel="noopener noreferrer">
-  <img src="https://img.shields.io/badge/🌐%203D%20SHOWCASE-GITHUB%20PAGES-7928CA?style=for-the-badge&logo=three.js&logoColor=white&labelColor=0b1329" height="52" alt="Launch 3D GitHub Pages Showcase" />
+<a href="https://github.com/Ashish-004-mar/astra-astronaut-health-monitor" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/badge/🛰️%20VIEW%20SOURCE-GITHUB%20REPO-181717?style=for-the-badge&logo=github&logoColor=white&labelColor=0b1329" height="52" alt="View GitHub Repository" />
 </a>
 
 <br /><br />
 
-**[🌐 Launch 3D Showcase](https://Ashish-004-mar.github.io/astra-astronaut-health-monitor/) · [🛰️ Repository Source](https://github.com/Ashish-004-mar/astra-astronaut-health-monitor) · [🌌 Watch Galaxy Video](docs/assets/astra-galaxy.mp4) · [🚀 Live Cloud URL](https://astra-health-monitor.embarko.app)**
+**[🚀 Live Cloud App (Embarko)](https://astra-health-monitor.embarko.app) · [🛰️ Repository Source](https://github.com/Ashish-004-mar/astra-astronaut-health-monitor) · [🌌 Watch Galaxy Video](docs/assets/astra-galaxy.mp4)**
 
 ---
 
@@ -69,11 +69,11 @@ During long-duration deep-space exploration (such as Artemis lunar missions and 
 
 ## 🎬 Cinematic Mission Video & 3D Showcase
 
-The project features a dedicated **3D Space Showcase** hosted on GitHub Pages:
+The project features a dedicated **3D Space Showcase** module located in the `github-showcase/` directory:
 
-[![ASTRA Cinematic Video Preview](docs/assets/hero-video-thumb.jpg)](https://Ashish-004-mar.github.io/astra-astronaut-health-monitor/)
+[![ASTRA Cinematic Video Preview](docs/assets/hero-video-thumb.jpg)](docs/assets/astra-galaxy.mp4)
 
-> 👉 **Click the preview above to open the live interactive showcase**, featuring fullscreen 1080p intro video playback, interactive rotating WebGL Earth, 3D animated architecture, and operational module deep-dives.
+> 👉 **Watch the preview above or run the showcase locally** (`cd github-showcase && npx vite`), featuring fullscreen 1080p intro video playback, interactive rotating WebGL Earth, 3D animated architecture, and operational module deep-dives.
 
 ---
 
@@ -412,7 +412,7 @@ npm run build
 ```
 Application runs locally at: **`http://127.0.0.1:5173/`**
 
-### 2. Standalone 3D GitHub Showcase
+### 2. Standalone 3D Space Showcase
 
 ```sh
 # Navigate into showcase directory
@@ -425,15 +425,6 @@ npx vite
 npx vite build
 ```
 Showcase runs locally at: **`http://localhost:5174/`**
-
----
-
-## 🚢 GitHub Pages Automated Deployment
-
-The 3D showcase is automatically built and deployed to GitHub Pages via GitHub Actions:
-- **Workflow**: `.github/workflows/deploy-showcase.yml`
-- **Trigger**: Automatic on `push` to `main` branch or manual via `workflow_dispatch`.
-- **Target URL**: `https://Ashish-004-mar.github.io/astra-astronaut-health-monitor/`
 
 ---
 
@@ -455,6 +446,6 @@ In accordance with NASA Space Apps Challenge regulations, development of this pr
 - **Developer**: Ashish-004-mar
 - **Challenge**: NASA Space Apps Challenge 2026
 - **Repository**: [https://github.com/Ashish-004-mar/astra-astronaut-health-monitor](https://github.com/Ashish-004-mar/astra-astronaut-health-monitor)
-- **Live 3D Showcase**: [https://Ashish-004-mar.github.io/astra-astronaut-health-monitor/](https://Ashish-004-mar.github.io/astra-astronaut-health-monitor/)
+- **Live Cloud App**: [https://astra-health-monitor.embarko.app](https://astra-health-monitor.embarko.app)
 
 *Ad Astra Per Aspera — Through Hardship to the Stars.*

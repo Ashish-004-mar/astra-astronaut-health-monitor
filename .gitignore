@@ -35,3 +35,6 @@ public/media/*.original.mp4
 
 # Vite cache
 .vite/
+
+# Archives
+*.zip
